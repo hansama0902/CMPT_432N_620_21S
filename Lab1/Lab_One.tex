@@ -1,0 +1,127 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% CMPT 432
+% Fall 2021
+% Lab One
+%
+%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%----------------------------------------------------------------------------------------
+%	PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass[letterpaper, 10pt,DIV=13]{scrartcl} 
+
+\usepackage[T1]{fontenc} % Use 8-bit encoding that has 256 glyphs
+\usepackage[english]{babel} % English language/hyphenation
+\usepackage{amsmath,amsfonts,amsthm,xfrac} % Math packages
+\usepackage{sectsty} % Allows customizing section commands
+\usepackage{graphicx}
+\usepackage[lined,linesnumbered,commentsnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage{parskip}
+\usepackage{lastpage}
+
+\allsectionsfont{\normalfont\scshape} % Make all section titles in default font and small caps.
+
+\usepackage{fancyhdr} % Custom headers and footers
+\pagestyle{fancyplain} % Makes all pages in the document conform to the custom headers and footers
+
+\fancyhead{} % No page header - if you want one, create it in the same way as the footers below
+\fancyfoot[L]{} % Empty left footer
+\fancyfoot[C]{} % Empty center footer
+\fancyfoot[R]{page \thepage\ of \pageref{LastPage}} % Page numbering for right footer
+
+\renewcommand{\headrulewidth}{0pt} % Remove header underlines
+\renewcommand{\footrulewidth}{0pt} % Remove footer underlines
+\setlength{\headheight}{13.6pt} % Customize the height of the header
+
+\numberwithin{equation}{section} % Number equations within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{figure}{section} % Number figures within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+\numberwithin{table}{section} % Number tables within sections (i.e. 1.1, 1.2, 2.1, 2.2 instead of 1, 2, 3, 4)
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs.
+
+\binoppenalty=3000
+\relpenalty=3000
+
+%----------------------------------------------------------------------------------------
+%	TITLE SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\horrule}[1]{\rule{\linewidth}{#1}} % Create horizontal rule command with 1 argument of height
+
+\title{	
+   \normalfont \normalsize 
+   \textsc{CMPT 432 - Spring 2021 - Dr. Labouseur} \\[10pt] % Header stuff.
+   \horrule{0.5pt} \\[0.25cm] 	% Top horizontal rule
+   \huge Lab One  \\     	    % Assignment title
+   \horrule{0.5pt} \\[0.25cm] 	% Bottom horizontal rule
+}
+
+\author{shuhan Dong \\ \normalsize  shuhan.dong1@Marist.edu}
+
+\date{\normalsize\today} 	% Today's date.
+
+\begin{document}
+\maketitle % Print the title
+
+%----------------------------------------------------------------------------------------
+%   start Crafting a Compiler
+%----------------------------------------------------------------------------------------
+\section{Crafting a Compiler}
+\textsc{exercises 1.11(MOSS)	}
+
+Moss was working as same as lexical analysis and scanning of a compiler. It makes original data code by a student altered into a sequence of tokens and evaluated it. Evaluate tokenized versions of all student source code entries. When someone changes the variable name or tries to introduce spaces, the program's structure will not change. Moss can confirm that there is substantial overlap.
+
+\textsc{exercises 3.1	(token sequence)}
+
+
+main(,),
+\{,
+
+const ,float, payment ,= , 384.00 , ; ,
+
+float, bal, ; , 
+
+int , month , =  ,0 , ; ,
+
+bal, =, 15000, ; ,
+
+while, (, bal, >, 0 , ), \{ ,
+
+$
+printf,(,"Month : \% 2d Balance: \% 10.2f\backslash n",, month, bal, ), ; ,
+$
+
+
+bal,=,bal,-,payment,+,0.015,* ,bal,;, 
+
+month,=, month, +, 1,;,
+
+\},
+
+\}
+
+\section{Dragon}
+
+\textsc{exercises	1.1.4		(advantages	of	C as a target language) }
+
+The C compiler can be used on any platform and used on any platform and architecture where the C language is available. C language is more straightforward to understand than any intermediate language.
+
+\textsc{exercises 1.6.1	(variables	in	blockstructured	code)}
+
+w = 13, x = 11, y = 13, z = 11.
+
+
+
+
+
+
+
+
+
+
+
+
+\end{document}
