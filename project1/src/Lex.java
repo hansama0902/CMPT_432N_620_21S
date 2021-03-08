@@ -50,41 +50,58 @@ public class Lex {
   public static void log(LOG log , String msg) {
 
         System.out.println(log + " Lexer - " + msg);
-
-
   }
 
   public static void createToken(String type) {
     tokens.add(new Token(type, lineNum, linePos+1));
-    log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + linePos+1 + ")");
+    log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
   }
 
   public static void parse(Scanner input) {
     String line;
-    int len, i = 0, f = 0;
+    int len, i, f;
     char ch;
+    int program = 1;
+    boolean eop = false;
+    log(LOG.INFO, "Lexing program 1...");
 
     while (input.hasNext()) {
       line = input.nextLine();
       len = line.length();
       lineNum = lineNum + 1;
       linePos = 0;
+      i = 0; f = 0;
+
+      if (eop) {
+        log(LOG.INFO, "Lexing program " + program + "...");
+        eop = false;
+      }
 
       STATE state = STATE.DEFAULT;
       while (true) {
-        ch = line.charAt(i);
-
         if (i >= len || f >= len) {
+          if (eop) {
+            break;
+          }
           log(LOG.WARNING, "Reached EOL without finding $.");
+          break;
         }
 
+        ch = line.charAt(i);
         switch (state) {
           case DEFAULT:
             if (ch == '$') {
               createToken(Character.toString(ch));
               if (i < len - 1) {
                 log(LOG.WARNING, "Unreachable code. All code after the '$' has been ignored.");
+              } else {
+                program++;
+                eop = true;
+                log(LOG.INFO, "Lex completed with 0 errors");
+                System.out.println("\n");
               }
+              break;
+
             } else if (ch == '=') {
               if (i+1 < len && line.charAt(i+1) == '=') {
                 createToken("==");
@@ -105,6 +122,7 @@ public class Lex {
             } else if (ch == ')') {
               createToken(Character.toString(ch));
             } else if (ch == '{') {
+
               createToken(Character.toString(ch));
             } else if (ch == '}') {
               createToken(Character.toString(ch));
@@ -132,7 +150,7 @@ public class Lex {
     initTokenKind();
     Scanner input = new Scanner(System.in);
     parse(input);
-
+    input.close();
   }
 
 
