@@ -15,7 +15,6 @@ enum STATE {
   DEFAULT,
 }
 
-
 public class Lex {
 
   static ArrayList<Token> tokens = new ArrayList<Token>();
@@ -63,6 +62,7 @@ public class Lex {
     char ch;
     int program = 1;
     boolean eop = false;
+    boolean isKeyword = false;
     log(LOG.INFO, "Lexing program 1...");
 
     while (input.hasNext()) {
@@ -115,6 +115,9 @@ public class Lex {
               } else {
                 log(LOG.ERROR, "Unrecognized Token: " + ch);
               }
+            } else if (ch == '"') {
+              state = STATE.STRING;
+              createToken(Character.toString(ch));
             } else if (ch == '+') {
               createToken(Character.toString(ch));
             } else if (ch == '(') {
@@ -122,18 +125,40 @@ public class Lex {
             } else if (ch == ')') {
               createToken(Character.toString(ch));
             } else if (ch == '{') {
-
               createToken(Character.toString(ch));
             } else if (ch == '}') {
               createToken(Character.toString(ch));
             } else if (ch == '\n') {
               ++lineNum;
               linePos = 0;
+            } else if (ch >= 'a' && ch <= 'z') {
+               state = STATE.SEARCHING;
+               f = i + 1;
             }
             break;
           case SEARCHING:
+            String s;
+            s = line.substring(i, f);
+            if (hmap.containsKey(s)) {
+              createToken(s);
+              state = STATE.DEFAULT;
+              linePos += (f - i);
+              isKeyword = true;
+              break;
+            } else {
+              f++;
+            }
+            if (!isKeyword) {
+              createToken("char");
+            }
             break;
           case STRING:
+            if(ch == '"') {
+              createToken(Character.toString(ch));
+              state = STATE.DEFAULT;
+            } else if (ch >= 'a' && ch <='z') {
+              createToken("char");
+            }
             break;
 
         }
