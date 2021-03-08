@@ -12,6 +12,7 @@ enum LOG {
 enum STATE {
   SEARCHING,
   STRING,
+  SKIP,
   DEFAULT,
 }
 
@@ -63,6 +64,7 @@ public class Lex {
     int program = 1;
     boolean eop = false;
     boolean isKeyword = false;
+    boolean isComment = false;
     log(LOG.INFO, "Lexing program 1...");
 
     while (input.hasNext()) {
@@ -134,6 +136,11 @@ public class Lex {
             } else if (ch >= 'a' && ch <= 'z') {
                state = STATE.SEARCHING;
                f = i + 1;
+            } else if (ch == '/') {
+              if (i < len -1 && line.charAt(i+1) == '*') {
+                i++;
+                state = STATE.SKIP;
+              }
             }
             break;
           case SEARCHING:
@@ -160,7 +167,19 @@ public class Lex {
               createToken("char");
             }
             break;
-
+          case SKIP:
+            while(i < len) {
+              if (line.charAt(i) == '*' && line.charAt(i+1) == '/') {
+                state = STATE.DEFAULT;
+                isComment = true;
+                break;
+              }
+              i++;
+              linePos++;
+            }
+            if (!isComment && i >= len) {
+              log(LOG.ERROR, "/* */ not paired");
+            }
         }
 
         if (state != STATE.SEARCHING) {
