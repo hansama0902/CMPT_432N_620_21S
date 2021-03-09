@@ -60,7 +60,7 @@ public class Lex {
   public static void parse(Scanner input) {
     String line;
     int len, i, f;
-    char ch;
+    char ch, ch2;
     int program = 1;
     boolean eop = false;
     boolean isKeyword = false;
@@ -141,23 +141,31 @@ public class Lex {
                 i++;
                 state = STATE.SKIP;
               }
+            } else if (ch == ' ' || ch == '\t') {
+              break;
+            } else {
+              log(LOG.ERROR, "Unrecognized Token:" + Character.toString(ch));
             }
             break;
           case SEARCHING:
             String s;
             s = line.substring(i, f);
+            ch2 = line.charAt(f);
             if (hmap.containsKey(s)) {
               createToken(s);
               state = STATE.DEFAULT;
-              linePos += (f - i);
+              linePos += (f-i);
+              i = f;
               isKeyword = true;
               break;
             } else {
               f++;
             }
-            if (!isKeyword) {
+            if (!isKeyword && (ch2 > 'z' || ch < 'a') ) {
               createToken("char");
+              state = STATE.DEFAULT;
             }
+            isKeyword = false;
             break;
           case STRING:
             if(ch == '"') {
