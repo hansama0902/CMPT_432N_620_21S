@@ -57,15 +57,20 @@ public class Lex {
     log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
   }
 
+  public static void createToken(String type, String a) {
+    tokens.add(new Token(type, lineNum, linePos+1));
+    log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+  }
   public static void parse(Scanner input) {
     String line;
     int len, i, f;
     char ch, ch2;
     int program = 1;
+    int err = 0;
     boolean eop = false;
     boolean isKeyword = false;
     boolean isComment = false;
-    log(LOG.INFO, "Lexing program 1...");
+    log(LOG.INFO, "Lexing program 1 ...");
 
     while (input.hasNext()) {
       line = input.nextLine();
@@ -75,17 +80,17 @@ public class Lex {
       i = 0; f = 0;
 
       if (eop) {
-        log(LOG.INFO, "Lexing program " + program + "...");
+        log(LOG.INFO, "Lexing program " + program + " ...");
         eop = false;
       }
 
       STATE state = STATE.DEFAULT;
       while (true) {
-        if (i >= len || f >= len) {
+        if (i >= len) {
           if (eop) {
             break;
           }
-          log(LOG.WARNING, "Reached EOL without finding $.");
+          //log(LOG.WARNING, "Reached EOL without finding $." + i);
           break;
         }
 
@@ -99,8 +104,15 @@ public class Lex {
               } else {
                 program++;
                 eop = true;
-                log(LOG.INFO, "Lex completed with 0 errors");
+                if (err == 0) {
+                  log(LOG.INFO, "Lex completed with 0 errors");
+                } else {
+                  log(LOG.ERROR, "Lex failed with " + err + " error(s)");
+                }
                 System.out.println("\n");
+                err = 0;
+                isComment = false;
+                isKeyword = false;
               }
               break;
 
@@ -135,16 +147,19 @@ public class Lex {
               linePos = 0;
             } else if (ch >= 'a' && ch <= 'z') {
                state = STATE.SEARCHING;
-               f = i + 1;
+               f = i;
             } else if (ch == '/') {
               if (i < len -1 && line.charAt(i+1) == '*') {
                 i++;
                 state = STATE.SKIP;
               }
-            } else if (ch == ' ' || ch == '\t') {
+            } else if (ch == '\t') {
               break;
+            } else if( ch == ' ') {
+
             } else {
-              log(LOG.ERROR, "Unrecognized Token:" + Character.toString(ch));
+              err++;
+              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch));
             }
             break;
           case SEARCHING:
@@ -155,14 +170,14 @@ public class Lex {
               createToken(s);
               state = STATE.DEFAULT;
               linePos += (f-i);
-              i = f;
+              i = f - 1;
               isKeyword = true;
-              break;
             } else {
               f++;
             }
-            if (!isKeyword && (ch2 > 'z' || ch < 'a') ) {
-              createToken("char");
+            
+            if (!isKeyword && (ch2 > 'z' || ch2 < 'a') || f >= len) {
+              createToken("char", Character.toString(ch));
               state = STATE.DEFAULT;
             }
             isKeyword = false;
@@ -187,7 +202,9 @@ public class Lex {
             }
             if (!isComment && i >= len) {
               log(LOG.ERROR, "/* */ not paired");
+              err++;
             }
+            break;
         }
 
         if (state != STATE.SEARCHING) {
