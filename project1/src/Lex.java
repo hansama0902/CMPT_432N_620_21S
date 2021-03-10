@@ -70,7 +70,6 @@ public class Lex {
     boolean eop = false;
     boolean isKeyword = false;
     boolean isComment = false;
-    log(LOG.INFO, "Lexing program 1 ...");
 
     while (input.hasNext()) {
       line = input.nextLine();
@@ -79,6 +78,10 @@ public class Lex {
       linePos = 0;
       i = 0; f = 0;
 
+      if (lineNum == 1 && linePos == 0) {
+        log(LOG.INFO, "Lexing program 1 ...");
+      }
+      
       if (eop) {
         log(LOG.INFO, "Lexing program " + program + " ...");
         eop = false;
@@ -175,7 +178,7 @@ public class Lex {
             } else {
               f++;
             }
-            
+
             if (!isKeyword && (ch2 > 'z' || ch2 < 'a') || f >= len) {
               createToken("char", Character.toString(ch));
               state = STATE.DEFAULT;
