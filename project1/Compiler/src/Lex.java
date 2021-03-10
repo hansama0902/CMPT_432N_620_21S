@@ -219,6 +219,7 @@ public class Lex {
   }
 
   public static void main(String[] args) {
+    System.out.println("please input your program : ");
     initTokenKind();
     Scanner input = new Scanner(System.in);
     parse(input);
