@@ -151,6 +151,8 @@ public class Lex {
             } else if (ch >= 'a' && ch <= 'z') {
                state = STATE.SEARCHING;
                f = i;
+            } else if (ch >= '0' && ch <= '9') {
+               createToken(Character.toString(ch));
             } else if (ch == '/') {
               if (i < len -1 && line.charAt(i+1) == '*') {
                 i++;
