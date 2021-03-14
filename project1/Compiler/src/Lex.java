@@ -42,7 +42,7 @@ public class Lex {
     hmap.put("!=", "BOOLOP");
     hmap.put("==", "BOOLOP");
     hmap.put("=", "ASSIGN");
-    hmap.put("0-9", "DIGIT");
+    hmap.put("digit", "DIGIT");
     hmap.put("+", "OP");
     hmap.put("$", "EOP");
   }
@@ -61,6 +61,12 @@ public class Lex {
     tokens.add(new Token(type, lineNum, linePos+1));
     log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
   }
+
+  public static void createToken(String type, int num) {
+    tokens.add(new Token(type, lineNum, linePos+1));
+    log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+  }
+
   public static void parse(Scanner input) {
     String line;
     int len, i, f;
@@ -152,7 +158,7 @@ public class Lex {
                state = STATE.SEARCHING;
                f = i;
             } else if (ch >= '0' && ch <= '9') {
-               createToken(Character.toString(ch));
+               createToken("digit", ch-'0');
             } else if (ch == '/') {
               if (i < len -1 && line.charAt(i+1) == '*') {
                 i++;
