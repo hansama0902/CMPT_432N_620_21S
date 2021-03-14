@@ -48,8 +48,9 @@ public class Lex {
   }
 
   public static void log(LOG log , String msg) {
-
-        System.out.println(log + " Lexer - " + msg);
+    
+      System.out.println();  
+      System.out.println(log + " Lexer - " + msg);
   }
 
   public static void createToken(String type) {
@@ -85,7 +86,7 @@ public class Lex {
       i = 0; f = 0;
 
       if (lineNum == 1 && linePos == 0) {
-        log(LOG.INFO, "\nLexing program 1 ...");
+        log(LOG.INFO, "Lexing program 1 ...");
       }
       
       if (eop) {
