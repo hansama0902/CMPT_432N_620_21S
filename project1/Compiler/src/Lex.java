@@ -79,7 +79,7 @@ public class Lex {
       i = 0; f = 0;
 
       if (lineNum == 1 && linePos == 0) {
-        log(LOG.INFO, "Lexing program 1 ...");
+        log(LOG.INFO, "\nLexing program 1 ...");
       }
       
       if (eop) {
