@@ -137,7 +137,7 @@ public class Lex {
               if (i+1 < len && line.charAt(i+1) == '=') {
                 createToken("!=");
               } else {
-                log(LOG.ERROR, "Unrecognized Token: " + ch);
+                log(LOG.ERROR, "Unrecognized Token: " + ch + "suggestion: please use the correct operator!");
               }
             } else if (ch == '"') {
               state = STATE.STRING;
@@ -171,7 +171,8 @@ public class Lex {
 
             } else {
               err++;
-              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch));
+              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch) +
+                  "suggestion: your input is not supported!");
             }
             break;
           case SEARCHING:
@@ -213,7 +214,7 @@ public class Lex {
               linePos++;
             }
             if (!isComment && i >= len) {
-              log(LOG.ERROR, "/* */ not paired");
+              log(LOG.ERROR, "/* */ not paired!" + " suggestion: please check the comment pairs");
               err++;
             }
             break;
@@ -234,6 +235,4 @@ public class Lex {
     parse(input);
     input.close();
   }
-
-
 }
