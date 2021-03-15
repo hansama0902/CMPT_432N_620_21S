@@ -77,6 +77,7 @@ public class Lex {
     boolean eop = false;
     boolean isKeyword = false;
     boolean isComment = false;
+    boolean isBlock = false;
 
     while (input.hasNext()) {
       line = input.nextLine();
@@ -100,7 +101,10 @@ public class Lex {
           if (eop) {
             break;
           }
-          //log(LOG.WARNING, "Reached EOL without finding $." + i);
+          if (isBlock && !eop) {
+            log(LOG.WARNING, "there is no $ in the program");
+            eop = true; //Auto fix the warning to make the program go on
+          }
           break;
         }
 
@@ -150,7 +154,9 @@ public class Lex {
               createToken(Character.toString(ch));
             } else if (ch == '{') {
               createToken(Character.toString(ch));
+              isBlock = false;
             } else if (ch == '}') {
+              isBlock = true;
               createToken(Character.toString(ch));
             } else if (ch == '\n') {
               ++lineNum;
