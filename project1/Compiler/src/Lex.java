@@ -141,7 +141,7 @@ public class Lex {
               if (i+1 < len && line.charAt(i+1) == '=') {
                 createToken("!=");
               } else {
-                log(LOG.ERROR, "Unrecognized Token: " + ch + "suggestion: please use the correct operator!");
+                log(LOG.ERROR, "Unrecognized Token: " + ch + " suggestion: please use the correct operator!");
               }
             } else if (ch == '"') {
               state = STATE.STRING;
@@ -207,6 +207,11 @@ public class Lex {
               state = STATE.DEFAULT;
             } else if (ch >= 'a' && ch <='z') {
               createToken("char", Character.toString(ch));
+            } else {
+              err++;
+              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch) +
+                      "suggestion: your input string should be a-z!");
+              break;
             }
             break;
           case SKIP:
