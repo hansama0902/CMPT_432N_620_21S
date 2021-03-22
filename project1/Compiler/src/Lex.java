@@ -206,7 +206,7 @@ public class Lex {
               createToken(Character.toString(ch));
               state = STATE.DEFAULT;
             } else if (ch >= 'a' && ch <='z') {
-              createToken("char");
+              createToken("char", Character.toString(ch));
             }
             break;
           case SKIP:
