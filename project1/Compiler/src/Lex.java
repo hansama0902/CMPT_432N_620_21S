@@ -33,6 +33,7 @@ public class Lex {
     hmap.put("while", "WHILE");
     hmap.put("print", "PRINT");
     hmap.put("int", "I_TYPE");
+    hmap.put("space", "SPACE");
     hmap.put("boolean", "I_TYPE");
     hmap.put("string", "I_TYPE");
     hmap.put("false", "BOOLVAR");
@@ -141,6 +142,7 @@ public class Lex {
               if (i+1 < len && line.charAt(i+1) == '=') {
                 createToken("!=");
               } else {
+                err++;
                 log(LOG.ERROR, "Unrecognized Token: " + ch + " suggestion: please use the correct operator!");
               }
             } else if (ch == '"') {
@@ -177,7 +179,7 @@ public class Lex {
 
             } else {
               err++;
-              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch) +
+              log(LOG.ERROR, "Error:" +lineNum + ":" + (linePos + 1) +" Unrecognized Token:" + Character.toString(ch) +
                   "suggestion: your input is not supported!");
             }
             break;
@@ -207,10 +209,18 @@ public class Lex {
               state = STATE.DEFAULT;
             } else if (ch >= 'a' && ch <='z') {
               createToken("char", Character.toString(ch));
+            } else if (ch == ' ') {
+              createToken("space", " ");
             } else {
+                err++;
+                log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch) +
+                        "suggestion: your input string should be a-z!");
+                break;
+            }
+            if (i == len-1 && ch != '"') {
               err++;
-              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch) +
-                      "suggestion: your input string should be a-z!");
+              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" \" unpair quote " +
+                      "suggestion: your quote should be paired!");
               break;
             }
             break;
