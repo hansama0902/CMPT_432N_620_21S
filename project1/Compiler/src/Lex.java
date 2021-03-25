@@ -116,19 +116,19 @@ public class Lex {
               createToken(Character.toString(ch));
               if (i < len - 1) {
                 log(LOG.WARNING, "Unreachable code. All code after the '$' has been ignored.");
-              } else {
-                program++;
-                eop = true;
-                if (err == 0) {
-                  log(LOG.INFO, "Lex completed with 0 errors");
-                } else {
-                  log(LOG.ERROR, "Lex failed with " + err + " error(s)");
-                }
-                System.out.println("\n");
-                err = 0;
-                isComment = false;
-                isKeyword = false;
               }
+              eop = true;
+              program++;
+              if (err == 0) {
+                log(LOG.INFO, "Lex completed with 0 errors");
+              } else {
+                log(LOG.ERROR, "Lex failed with " + err + " error(s)");
+              }
+              System.out.println("\n");
+              err = 0;
+              isComment = false;
+              isKeyword = false;
+
               break;
 
             } else if (ch == '=') {
