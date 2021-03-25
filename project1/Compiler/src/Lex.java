@@ -235,9 +235,10 @@ public class Lex {
               linePos++;
             }
             if (!isComment && i >= len) {
-              log(LOG.ERROR, "/* */ not paired!" + " suggestion: please check the comment pairs");
+              log(LOG.ERROR, "Ending comments not paired!" + " suggestion: please check the comment pairs");
               err++;
             }
+            isComment = false;
             break;
         }
 
