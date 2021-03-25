@@ -213,13 +213,13 @@ public class Lex {
               createToken("space", " ");
             } else {
                 err++;
-                log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" Unrecognized Token:" + Character.toString(ch) +
+                log(LOG.ERROR, "Error:" +lineNum + ":" + (linePos + 1) +" Unrecognized Token:" +" "+ Character.toString(ch) +
                         "suggestion: your input string should be a-z!");
                 break;
             }
             if (i == len-1 && ch != '"') {
               err++;
-              log(LOG.ERROR, "Error:" +lineNum + ":" + linePos +" \" unpair quote " +
+              log(LOG.ERROR, "Error: "+" \" unpair quote " +
                       "suggestion: your quote should be paired!");
               break;
             }
