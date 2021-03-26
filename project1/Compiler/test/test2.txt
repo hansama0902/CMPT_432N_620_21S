@@ -1,4 +1,4 @@
-{}$	
-{{{{{{}}}}}}$	
-{{{{{{}}}	/*	comments	are	ignored	*/	}}}}$	
-{	/*	comments	are	still	ignored	*/	int	@}$
+/*  "This string is ignored" */"This one is
+not"$
+/*  /* This comment should still be ignored  */$
+
