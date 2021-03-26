@@ -1,0 +1,2 @@
+"string/* comments are not ignored here    *//* these will count as CHAR's*/"$
+"/* comments are not ignored */"$
