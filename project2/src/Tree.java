@@ -54,6 +54,13 @@ public class Tree {
     }
   }
 
+  public void endChildren() {
+    if ((this.currentNode.getParent() != null))
+    {
+      this.currentNode = this.currentNode.getParent();
+    }
+  }
+
   public String toString() {
 
     return null;
