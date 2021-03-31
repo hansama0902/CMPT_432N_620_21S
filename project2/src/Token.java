@@ -3,7 +3,7 @@ public class Token {
   String type;
   int line;
   int index;
-  int value;
+  String value;
   String name;
 
 
@@ -17,7 +17,7 @@ public class Token {
     this.index = index;
   }
 
-  public Token(String type, int line, int index, int value)
+  public Token(String type, int line, int index, String value)
   {
     this.type = type;
     this.line = line;
@@ -25,15 +25,8 @@ public class Token {
     this.value = value;
   }
 
-  public Token(String type, int line, int index, String name)
-  {
-    this.type = type;
-    this.line = line;
-    this.index = index;
-    this.name = name;
-  }
 
-  public Token(String type, int line, int index, int value, String name)
+  public Token(String type, int line, int index, String value, String name)
   {
     this.type = type;
     this.line = line;
