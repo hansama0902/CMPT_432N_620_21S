@@ -1,22 +1,77 @@
+import sun.jvm.hotspot.ui.tree.CStringTreeNodeAdapter;
+
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Parser {
+  Tree CST = new Tree();
 
-  class Grammar {
+
+  public void parse() {
 
   }
 
+  public void parseProgram(ArrayList<Token> tokens) {
 
+  }
 
+  public void parseBlock() {
 
+  }
 
+  public void parseStatementList() {
 
-  public static void main(String[] args) {
-    System.out.println("please input your program : ");
-    Lex lex = new Lex();
-    lex.initTokenKind();
-    Scanner input = new Scanner(System.in);
-    lex.parse(input);
-    input.close();
+  }
+
+  public void parseStatement() {
+
+  }
+
+  public void parsePrintStatement() {
+
+  }
+
+  public void parseAssignmentStatement() {
+
+  }
+
+  public void parseVarDecl() {
+
+  }
+
+  public void parseWhileStatement() {
+
+  }
+
+  public void parseIfStatement() {
+
+  }
+
+  public void parseExpr() {
+
+  }
+
+  public void parseIntExpr() {
+
+  }
+
+  public void parseStringExpr() {
+
+  }
+
+  public void parseBooleanExpr() {
+
+  }
+
+  public void parseId() {
+
+  }
+
+  public void parseCharList() {
+
+  }
+
+  public void match(String type) {
+
   }
 }

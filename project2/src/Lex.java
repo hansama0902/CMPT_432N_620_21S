@@ -18,12 +18,17 @@ enum STATE {
 
 public class Lex {
 
-  static ArrayList<Token> tokens = new ArrayList<Token>();
-  static HashMap<String, String> hmap = new HashMap<String, String>();
-  static int lineNum = 0;
-  static int linePos = 0;
+  ArrayList<Token> tokens = new ArrayList<Token>();
 
-  public static void initTokenKind() {
+  HashMap<String, String> hmap = new HashMap<String, String>();
+  int lineNum = 0;
+  int linePos = 0;
+
+  public ArrayList<Token> getTokens () {
+    return this.tokens;
+  }
+
+  public void initTokenKind() {
     hmap.put("{", "L_BRACE");
     hmap.put("}", "R_BRACE");
     hmap.put("(", "L_PAREN" );
@@ -48,28 +53,30 @@ public class Lex {
     hmap.put("$", "EOP");
   }
 
-  public static void log(LOG log , String msg) {
-    
+  public void log(LOG log , String msg) {
       System.out.println();  
       System.out.println(log + " Lexer - " + msg);
   }
 
-  public static void createToken(String type) {
+  public void createToken(String type) {
     tokens.add(new Token(type, lineNum, linePos+1));
-    log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    //log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
   }
 
-  public static void createToken(String type, String a) {
+  public void createToken(String type, String a) {
     tokens.add(new Token(type, lineNum, linePos+1));
-    log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    //log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
   }
 
-  public static void createToken(String type, int num) {
+  public void createToken(String type, int num) {
     tokens.add(new Token(type, lineNum, linePos+1));
-    log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    //log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
   }
 
-  public static void parse(Scanner input) {
+  public void parse(Scanner input) {
     String line;
     int len, i, f;
     char ch, ch2;
