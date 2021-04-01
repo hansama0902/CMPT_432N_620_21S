@@ -59,6 +59,19 @@ public class Parser {
 
   public void parseStatement() {
     LOG("parseStatement()");
+    if (currentToken.type == "print") {
+      this.parsePrintStatement();
+    } else if (currentToken.type == "string" ||
+               currentToken.type == "int" ||
+               currentToken.type == "boolean") {
+      this.parseVarDecl();
+    } else if (currentToken.type == "while") {
+      this.parseWhileStatement();
+    } else if (currentToken.type == "if") {
+      this.parseIfStatement();
+    } else {
+      this.parseBlock();
+    }
 
   }
 
@@ -83,6 +96,18 @@ public class Parser {
 
   public void parseVarDecl() {
     LOG("parseVarDecl()");
+    tree.addBranchNode("var");
+    if (currentToken.type == "int") {
+      this.match("int");
+      this.parseId();
+    } else if (currentToken.type == "string") {
+      this.match("string");
+      this.parseId();
+    } else if (currentToken.type == "boolean") {
+      this.match("boolean");
+      this.parseId();
+    }
+    tree.endChildren();
   }
 
   public void parseWhileStatement() {
@@ -105,6 +130,18 @@ public class Parser {
 
   public void parseExpr() {
     LOG("parseExpr()");
+    tree.addBranchNode("Expression");
+    if (currentToken.type == "digit") {
+      this.parseIntExpr();
+    } else if (currentToken.type == "\"") {
+      this.parseStringExpr();
+    } else if (currentToken.type == "(" ||
+               currentToken.type == "true" ||
+               currentToken.type == "false") {
+      this.parseBooleanExpr();
+    } else if (currentToken.type == "id") {
+      this.parseId();
+    }
   }
 
   public void parseIntExpr() {
@@ -131,7 +168,26 @@ public class Parser {
 
   public void parseBooleanExpr() {
     LOG("parseBooleanExpr()");
+    tree.addBranchNode("Boolean Expression");
+    if (currentToken.type == "true") {
+      this.match("true");
+    } else if (currentToken.type == "false") {
+      this.match("false");
+    } else {
+      this.match("(");
+      this.parseExpr();
 
+      if (currentToken.type == "=") {
+        this.match("=");
+        this.parseExpr();
+        this.match(")");
+      } else if (currentToken.type == "!=") {
+        this.match("!=");
+        this.parseExpr();
+        this.match(")");
+      }
+    }
+    tree.endChildren();
   }
 
   public void parseId() {
