@@ -23,7 +23,7 @@ public class Tree {
     this.currentNode = currentNode;
   }
 
-  public void addBranchNode(String type) {
+  public Node addBranchNode(String type) {
     Node node = new Node();
     node.setType(type);
 
@@ -35,9 +35,9 @@ public class Tree {
       node.setParent(this.currentNode);
       this.currentNode = node;
     }
+    return this.currentNode;
+
   }
-
-
   public void addLeafNode(Token token) {
     Node node = new Node();
     node.setType(token.type);
@@ -54,6 +54,22 @@ public class Tree {
     }
   }
 
+  public void addLeafNode(Node nd,  Token token) {
+    Node node = new Node();
+    node.setType(token.type);
+    node.setValue(token.value);
+    node.setLeafNode(true);
+    node.setLineNumber(token.line);
+
+    if (this.root == null) {
+      // log an error message, throw error
+
+    } else {
+      nd.addChild(node);
+      node.setParent(nd);
+    }
+  }
+
   public void endChildren() {
     if ((this.currentNode.getParent() != null))
     {
@@ -61,9 +77,42 @@ public class Tree {
     }
   }
 
-  public String toString() {
+  public void traverse(Node node, int depth, StringBuilder res)
+  {
+    // Space out based on the current depth so
+    // this looks at least a little tree-like.
+    String tmp = "";
+    for (int i = 0; i < depth; i++)
+    {
+      tmp += "-" ;
+    }
 
-    return null;
+    // If there are no children (i.e., leaf nodes)...
+    if (node.children.isEmpty() || node.children.size() == 0)
+    {
+      // ... note the leaf node.
+      tmp += "[ " + node.type + " ]";
+      tmp += "\n";
+      //System.out.println(res);
+      res.append(tmp);
+    }
+    else
+    {
+      // There are children, so note these interior/branch nodes and ...
+      tmp +=   node.type + "\n";
+      res.append(tmp);
+      //System.out.println(res);
+      // .. recursively expand them.
+      for (int i = 0; i < node.children.size(); i++)
+      {
+        traverse(node.children.get(i), depth + 1, res);
+      }
+    }
+  }
+  public void printString() {
+    StringBuilder res = new StringBuilder();
+    traverse(this.root, 0, res);
+    System.out.println(res);
   }
 
 }

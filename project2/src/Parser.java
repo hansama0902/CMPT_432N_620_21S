@@ -4,6 +4,7 @@ public class Parser {
   Tree tree;
   ArrayList<Token> ntokens;
   int tokenIndex = 0;
+  int line = 1;
   Token currentToken;
 
   public void LOG(String method) {
@@ -14,6 +15,9 @@ public class Parser {
     ntokens = tokens;
     tree = new Tree();
     currentToken = ntokens.get(tokenIndex);
+    if (currentToken.line == 1) {
+      System.out.println("PARSER: Parsing program 1...");
+    }
     this.parse();
   }
 
@@ -24,23 +28,26 @@ public class Parser {
 
   public void parseProgram() {
     LOG("parserProgram()");
-    tree.addBranchNode("<Program>");
+    Node node = tree.addBranchNode("<Program>");
     this.parseBlock();
-    this.match("$");
+    this.match(node,"$");
+    LOG("Parse completed successfully");
     tree.endChildren();
+    tree.printString();
   }
 
   public void parseBlock() {
     LOG("parseBlock()");
-    tree.addBranchNode("Block");
-    this.match("{");
+    Node node = tree.addBranchNode("<Block>");
+    this.match(node, "{");
     this.parseStatementList();
-    this.match("}");
+    this.match(node, "}");
     tree.endChildren();
   }
 
   public void parseStatementList() {
     LOG("parseStatementList()");
+    tree.addBranchNode("<Statement List>");
     if (currentToken.type == "print" ||
             currentToken.type == "ID" ||
             currentToken.type == "int"||
@@ -50,7 +57,7 @@ public class Parser {
             currentToken.type == "while" ||
             currentToken.type == "if"
     ) {
-      tree.addBranchNode("Statement List");
+
       this.parseStatement();
       this.parseStatementList();
       tree.endChildren();
@@ -77,7 +84,7 @@ public class Parser {
 
   public void parsePrintStatement() {
     LOG("parsePrintStatement()");
-    tree.addBranchNode("Print Statement");
+    tree.addBranchNode("<Print Statement>");
     this.match("print");
     this.match("(");
     this.parseExpr();
@@ -87,7 +94,7 @@ public class Parser {
 
   public void parseAssignmentStatement() {
     LOG("parseAssignmentStatement()");
-    tree.addBranchNode("Assignment Statement");
+    tree.addBranchNode("<Assignment Statement>");
     this.parseId();
     this.match("=");
     this.parseExpr();
@@ -96,7 +103,7 @@ public class Parser {
 
   public void parseVarDecl() {
     LOG("parseVarDecl()");
-    tree.addBranchNode("var");
+    tree.addBranchNode("<var>");
     if (currentToken.type == "int") {
       this.match("int");
       this.parseId();
@@ -112,7 +119,7 @@ public class Parser {
 
   public void parseWhileStatement() {
     LOG("parseWhileStatement()");
-    tree.addBranchNode("While Statement");
+    tree.addBranchNode("<While Statement>");
     this.match("while");
     this.parseBooleanExpr();
     this.parseBlock();
@@ -121,7 +128,7 @@ public class Parser {
 
   public void parseIfStatement() {
     LOG("parseIfStatement()");
-    tree.addBranchNode("If Statement");
+    tree.addBranchNode("<If Statement>");
     this.match("if");
     this.parseBooleanExpr();
     this.parseBlock();
@@ -130,7 +137,7 @@ public class Parser {
 
   public void parseExpr() {
     LOG("parseExpr()");
-    tree.addBranchNode("Expression");
+    tree.addBranchNode("<Expression>");
     if (currentToken.type == "digit") {
       this.parseIntExpr();
     } else if (currentToken.type == "\"") {
@@ -146,7 +153,7 @@ public class Parser {
 
   public void parseIntExpr() {
     LOG("parseIntExpr()");
-    tree.addBranchNode("Int Expression");
+    tree.addBranchNode("<Int Expression>");
     if (currentToken.type == "digit") {
       this.match("digit");
       if (currentToken.type == "+") {
@@ -159,7 +166,7 @@ public class Parser {
 
   public void parseStringExpr() {
     LOG("parseStringExpr()");
-    tree.addBranchNode("String Expression");
+    tree.addBranchNode("<String Expression>");
     this.match("\"");
     this.parseCharList();
     this.match("\"");
@@ -168,7 +175,7 @@ public class Parser {
 
   public void parseBooleanExpr() {
     LOG("parseBooleanExpr()");
-    tree.addBranchNode("Boolean Expression");
+    tree.addBranchNode("<Boolean Expression>");
     if (currentToken.type == "true") {
       this.match("true");
     } else if (currentToken.type == "false") {
@@ -192,7 +199,7 @@ public class Parser {
 
   public void parseId() {
     LOG("parseId()");
-    tree.addBranchNode("Identifier");
+    tree.addBranchNode("<Identifier>");
     this.match("id");
     tree.endChildren();
   }
@@ -200,12 +207,12 @@ public class Parser {
   public void parseCharList() {
     LOG("parseCharList()");
     if (currentToken.type == "char") {
-      tree.addBranchNode("Char List");
+      tree.addBranchNode("<Char List>");
       this.match("char");
       this.parseCharList();
       tree.endChildren();
     } else if (currentToken.type == "space") {
-      tree.addBranchNode("Char List");
+      tree.addBranchNode("<Char List>");
       this.match("space");
       this.parseCharList();
       tree.endChildren();
@@ -213,13 +220,34 @@ public class Parser {
   }
 
   public void match(String type) {
-    if(currentToken.type == type) {
+    if(currentToken.type.equals( type)) {
       tree.addLeafNode(currentToken);
     }
 
     if (tokenIndex < ntokens.size()) {
       currentToken = ntokens.get(tokenIndex);
       tokenIndex++;
+      if (currentToken.line != line && currentToken.index == 0) {
+        System.out.println("PARSER: Parsing program" + currentToken.line +"...");
+        line = currentToken.line;
+        this.parse();
+      }
+    }
+  }
+
+  public void match(Node node, String type) {
+    if(currentToken.type.equals(type)) {
+      tree.addLeafNode(node, currentToken);
+    }
+    if (tokenIndex + 1 < ntokens.size()) {
+
+      currentToken = ntokens.get(tokenIndex + 1);
+      tokenIndex++;
+      if (currentToken.line != line && currentToken.index == 0) {
+        System.out.println("PARSER: Parsing program" + currentToken.line +"...");
+        line = currentToken.line;
+        this.parse();
+      }
     }
   }
 }

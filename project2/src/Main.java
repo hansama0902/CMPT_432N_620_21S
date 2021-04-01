@@ -12,9 +12,6 @@ public class Main {
     Scanner input = new Scanner(System.in);
     lex.parse(input);
     input.close();
-
-    parser.init(lex.getTokens());
-
-
+    parser.init(lex.getTokens());{}
   }
 }

@@ -95,11 +95,11 @@ public class Lex {
       i = 0; f = 0;
 
       if (lineNum == 1 && linePos == 0) {
-        log(LOG.INFO, "Lexing program 1 ...");
+        System.out.println("LEXER: Lexing program 1 ...");
       }
       
       if (eop) {
-        log(LOG.INFO, "Lexing program " + program + " ...");
+        System.out.println("LEXER: Lexing program " + program + " ...");
         eop = false;
       }
 
@@ -127,7 +127,7 @@ public class Lex {
               eop = true;
               program++;
               if (err == 0) {
-                log(LOG.INFO, "Lex completed with 0 errors");
+                System.out.println("LEXER: Lex completed successfully");
               } else {
                 log(LOG.ERROR, "Lex failed with " + err + " error(s)");
               }
