@@ -19,10 +19,11 @@ enum STATE {
 public class Lex {
 
   ArrayList<Token> tokens = new ArrayList<Token>();
-
   HashMap<String, String> hmap = new HashMap<String, String>();
   int lineNum = 0;
   int linePos = 0;
+  int program = 1;
+  boolean eop = false;
 
   public ArrayList<Token> getTokens () {
     return this.tokens;
@@ -76,189 +77,181 @@ public class Lex {
     System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
   }
 
-  public void parse(Scanner input) {
-    String line;
+  public void parse(String line) {
     int len, i, f;
     char ch, ch2;
-    int program = 1;
     int err = 0;
-    boolean eop = false;
     boolean isKeyword = false;
     boolean isComment = false;
     boolean isBlock = false;
+    len = line.length();
+    lineNum = lineNum + 1;
+    linePos = 0;
+    i = 0; f = 0;
 
-    while (input.hasNext()) {
-      line = input.nextLine();
-      len = line.length();
-      lineNum = lineNum + 1;
-      linePos = 0;
-      i = 0; f = 0;
+    if (lineNum == 1 && linePos == 0) {
+      System.out.println("LEXER: Lexing program 1 ...");
+    } else if (eop){
+      System.out.println("LEXER: Lexing program " + lineNum + " ...");
+      eop = false;
+    }
 
-      if (lineNum == 1 && linePos == 0) {
-        System.out.println("LEXER: Lexing program 1 ...");
-      }
-      
-      if (eop) {
-        System.out.println("LEXER: Lexing program " + program + " ...");
-        eop = false;
-      }
-
-      STATE state = STATE.DEFAULT;
-      while (true) {
-        if (i >= len) {
-          if (eop) {
-            break;
-          }
-          if (isBlock && !eop) {
-            log(LOG.WARNING, "there is no $ in the program");
-            eop = true; //Auto fix the warning to make the program go on
-          }
+    STATE state = STATE.DEFAULT;
+    while (true) {
+      if (i >= len) {
+        if (eop) {
           break;
         }
+        if (isBlock && !eop) {
+          log(LOG.WARNING, "there is no $ in the program");
+          eop = true; //Auto fix the warning to make the program go on
+        }
+        break;
+      }
 
-        ch = line.charAt(i);
-        switch (state) {
-          case DEFAULT:
-            if (ch == '$') {
-              createToken(Character.toString(ch));
-              if (i < len - 1) {
-                log(LOG.WARNING, "Unreachable code. All code after the '$' has been ignored.");
-              }
-              eop = true;
-              program++;
-              if (err == 0) {
-                System.out.println("LEXER: Lex completed successfully");
-              } else {
-                log(LOG.ERROR, "Lex failed with " + err + " error(s)");
-              }
-              System.out.println("\n");
-              err = 0;
-              isComment = false;
-              isKeyword = false;
-
-              break;
-
-            } else if (ch == '=') {
-              if (i+1 < len && line.charAt(i+1) == '=') {
-                createToken("==");
-              } else {
-                createToken("=");
-              }
-
-            } else if (ch == '!') {
-              if (i+1 < len && line.charAt(i+1) == '=') {
-                createToken("!=");
-              } else {
-                err++;
-                log(LOG.ERROR, "Unrecognized Token: " + ch + " suggestion: please use the correct operator!");
-              }
-            } else if (ch == '"') {
-              state = STATE.STRING;
-              createToken(Character.toString(ch));
-            } else if (ch == '+') {
-              createToken(Character.toString(ch));
-            } else if (ch == '(') {
-              createToken(Character.toString(ch));
-            } else if (ch == ')') {
-              createToken(Character.toString(ch));
-            } else if (ch == '{') {
-              createToken(Character.toString(ch));
-              isBlock = false;
-            } else if (ch == '}') {
-              isBlock = true;
-              createToken(Character.toString(ch));
-            } else if (ch == '\n') {
-              ++lineNum;
-              linePos = 0;
-            } else if (ch >= 'a' && ch <= 'z') {
-               state = STATE.SEARCHING;
-               f = i;
-            } else if (ch >= '0' && ch <= '9') {
-               createToken("digit", ch-'0');
-            } else if (ch == '/') {
-              if (i < len -1 && line.charAt(i+1) == '*') {
-                i++;
-                state = STATE.SKIP;
-              }
-            } else if (ch == '\t') {
-              break;
-            } else if( ch == ' ') {
-
+      ch = line.charAt(i);
+      switch (state) {
+        case DEFAULT:
+          if (ch == '$') {
+            createToken(Character.toString(ch));
+            if (i < len - 1) {
+              log(LOG.WARNING, "Unreachable code. All code after the '$' has been ignored.");
+            }
+            eop = true;
+            program++;
+            if (err == 0) {
+              System.out.println("LEXER: Lex completed successfully");
             } else {
-              err++;
-              log(LOG.ERROR, "Error:" +lineNum + ":" + (linePos + 1) +" Unrecognized Token:" + Character.toString(ch) +
-                  "suggestion: your input is not supported!");
+              log(LOG.ERROR, "Lex failed with " + err + " error(s)");
             }
-            break;
-          case SEARCHING:
-            String s;
-            s = line.substring(i, f);
-            ch2 = line.charAt(f);
-            if (hmap.containsKey(s)) {
-              createToken(s);
-              state = STATE.DEFAULT;
-              linePos += (f-i);
-              i = f - 1;
-              isKeyword = true;
-            } else {
-              f++;
-            }
-
-            if (!isKeyword && (ch2 > 'z' || ch2 < 'a') || f >= len) {
-              createToken("char", Character.toString(ch));
-              state = STATE.DEFAULT;
-            }
-            isKeyword = false;
-            break;
-          case STRING:
-            if(ch == '"') {
-              createToken(Character.toString(ch));
-              state = STATE.DEFAULT;
-            } else if (ch >= 'a' && ch <='z') {
-              createToken("char", Character.toString(ch));
-            } else if (ch == ' ') {
-              createToken("space", " ");
-            } else if (ch == '/') {
-              if (i < len -1 && line.charAt(i+1) == '*') {
-                i++;
-                state = STATE.SKIP;
-              }
-            }  else {
-                err++;
-                log(LOG.ERROR, "Error:" +lineNum + ":" + (linePos + 1) +" Unrecognized Token:" +" "+ Character.toString(ch) +
-                        "suggestion: your input string should be a-z!");
-                break;
-            }
-            if (i == len-1 && ch != '"') {
-              err++;
-              log(LOG.ERROR, "Error: "+" \" unpair quote " +
-                      "suggestion: your quote should be paired!");
-              break;
-            }
-            break;
-          case SKIP:
-            while(i < len) {
-              if (line.charAt(i) == '*' && line.charAt(i+1) == '/') {
-                state = STATE.DEFAULT;
-                isComment = true;
-                break;
-              }
-              i++;
-              linePos++;
-            }
-            if (!isComment && i >= len) {
-              log(LOG.ERROR, "Ending comments not paired!" + " suggestion: please check the comment pairs");
-              err++;
-            }
+            System.out.println("\n");
+            err = 0;
             isComment = false;
-            break;
-        }
+            isKeyword = false;
 
-        if (state != STATE.SEARCHING) {
-          i++;
-          linePos++;
-        }
+            break;
+
+          } else if (ch == '=') {
+            if (i+1 < len && line.charAt(i+1) == '=') {
+              createToken("==");
+            } else {
+              createToken("=");
+            }
+
+          } else if (ch == '!') {
+            if (i+1 < len && line.charAt(i+1) == '=') {
+              createToken("!=");
+            } else {
+              err++;
+              log(LOG.ERROR, "Unrecognized Token: " + ch + " suggestion: please use the correct operator!");
+            }
+          } else if (ch == '"') {
+            state = STATE.STRING;
+            createToken(Character.toString(ch));
+          } else if (ch == '+') {
+            createToken(Character.toString(ch));
+          } else if (ch == '(') {
+            createToken(Character.toString(ch));
+          } else if (ch == ')') {
+            createToken(Character.toString(ch));
+          } else if (ch == '{') {
+            createToken(Character.toString(ch));
+            isBlock = false;
+          } else if (ch == '}') {
+            isBlock = true;
+            createToken(Character.toString(ch));
+          } else if (ch == '\n') {
+            ++lineNum;
+            linePos = 0;
+          } else if (ch >= 'a' && ch <= 'z') {
+             state = STATE.SEARCHING;
+             f = i;
+          } else if (ch >= '0' && ch <= '9') {
+             createToken("digit", ch-'0');
+          } else if (ch == '/') {
+            if (i < len -1 && line.charAt(i+1) == '*') {
+              i++;
+              state = STATE.SKIP;
+            }
+          } else if (ch == '\t') {
+            break;
+          } else if( ch == ' ') {
+
+          } else {
+            err++;
+            log(LOG.ERROR, "Error:" +lineNum + ":" + (linePos + 1) +" Unrecognized Token:" + Character.toString(ch) +
+                "suggestion: your input is not supported!");
+          }
+          break;
+        case SEARCHING:
+          String s;
+          s = line.substring(i, f);
+          ch2 = line.charAt(f);
+          if (hmap.containsKey(s)) {
+            createToken(s);
+            state = STATE.DEFAULT;
+            linePos += (f-i);
+            i = f - 1;
+            isKeyword = true;
+          } else {
+            f++;
+          }
+
+          if (!isKeyword && (ch2 > 'z' || ch2 < 'a') || f >= len) {
+            createToken("char", Character.toString(ch));
+            state = STATE.DEFAULT;
+          }
+          isKeyword = false;
+          break;
+        case STRING:
+          if(ch == '"') {
+            createToken(Character.toString(ch));
+            state = STATE.DEFAULT;
+          } else if (ch >= 'a' && ch <='z') {
+            createToken("char", Character.toString(ch));
+          } else if (ch == ' ') {
+            createToken("space", " ");
+          } else if (ch == '/') {
+            if (i < len -1 && line.charAt(i+1) == '*') {
+              i++;
+              state = STATE.SKIP;
+            }
+          }  else {
+              err++;
+              log(LOG.ERROR, "Error:" +lineNum + ":" + (linePos + 1) +" Unrecognized Token:" +" "+ Character.toString(ch) +
+                      "suggestion: your input string should be a-z!");
+              break;
+          }
+          if (i == len-1 && ch != '"') {
+            err++;
+            log(LOG.ERROR, "Error: "+" \" unpair quote " +
+                    "suggestion: your quote should be paired!");
+            break;
+          }
+          break;
+        case SKIP:
+          while(i < len) {
+            if (line.charAt(i) == '*' && line.charAt(i+1) == '/') {
+              state = STATE.DEFAULT;
+              isComment = true;
+              break;
+            }
+            i++;
+            linePos++;
+          }
+          if (!isComment && i >= len) {
+            log(LOG.ERROR, "Ending comments not paired!" + " suggestion: please check the comment pairs");
+            err++;
+          }
+          isComment = false;
+          break;
+      }
+
+      if (state != STATE.SEARCHING) {
+        i++;
+        linePos++;
       }
     }
+
   }
 }

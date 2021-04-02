@@ -6,7 +6,8 @@ public class Parser {
   int tokenIndex = 0;
   int line = 1;
   Token currentToken;
-
+  boolean eop = false;
+  int program = 1;
   public void LOG(String method) {
     System.out.println("PARSER: " + method);
   }
@@ -15,8 +16,12 @@ public class Parser {
     ntokens = tokens;
     tree = new Tree();
     currentToken = ntokens.get(tokenIndex);
+
     if (currentToken.line == 1) {
       System.out.println("PARSER: Parsing program 1...");
+    } else if (eop){
+      System.out.println("PARSER: Parsing program " + currentToken.line +"...");
+      eop = false;
     }
     this.parse();
   }
@@ -31,9 +36,11 @@ public class Parser {
     Node node = tree.addBranchNode("<Program>");
     this.parseBlock();
     this.match(node,"$");
-    LOG("Parse completed successfully");
+    LOG("Parse completed successfully\n\n");
     tree.endChildren();
-    tree.printString();
+    tree.printString(program);
+    eop = true;
+    program++;
   }
 
   public void parseBlock() {
@@ -48,14 +55,14 @@ public class Parser {
   public void parseStatementList() {
     LOG("parseStatementList()");
     tree.addBranchNode("<Statement List>");
-    if (currentToken.type == "print" ||
-            currentToken.type == "ID" ||
-            currentToken.type == "int"||
-            currentToken.type == "boolean" ||
-            currentToken.type == "string" ||
-            currentToken.type == "{" ||
-            currentToken.type == "while" ||
-            currentToken.type == "if"
+    if (currentToken.type.equals( "print" ) ||
+            currentToken.type.equals( "ID" )||
+            currentToken.type.equals( "int" )||
+            currentToken.type.equals( "boolean" ) ||
+            currentToken.type.equals( "string" ) ||
+            currentToken.type.equals( "{" ) ||
+            currentToken.type.equals( "while" ) ||
+            currentToken.type.equals( "if" )
     ) {
 
       this.parseStatement();
@@ -224,14 +231,10 @@ public class Parser {
       tree.addLeafNode(node, currentToken);
     }
     if (tokenIndex + 1 < ntokens.size()) {
-
       currentToken = ntokens.get(tokenIndex + 1);
       tokenIndex++;
-      if (currentToken.line != line && currentToken.index == 0) {
-        System.out.println("PARSER: Parsing program" + currentToken.line +"...");
-        line = currentToken.line;
-        this.parse();
-      }
+    } else if (currentToken.type.equals("$")) {
+      tokenIndex++;
     }
   }
 }

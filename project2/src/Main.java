@@ -10,8 +10,13 @@ public class Main {
 
     lex.initTokenKind();
     Scanner input = new Scanner(System.in);
-    lex.parse(input);
+    String line;
+    while(input.hasNext()) {
+      line = input.nextLine();
+      lex.parse(line);
+      parser.init(lex.getTokens());
+    }
+
     input.close();
-    parser.init(lex.getTokens());{}
   }
 }
