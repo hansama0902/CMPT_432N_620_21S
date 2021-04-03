@@ -66,13 +66,13 @@ public class Lex {
   }
 
   public void createToken(String type, String a) {
-    tokens.add(new Token(type, lineNum, linePos+1));
+    tokens.add(new Token(type, lineNum, linePos+1, a));
     //log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
     System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, int num) {
-    tokens.add(new Token(type, lineNum, linePos+1));
+    tokens.add(new Token(type, lineNum, linePos+1, Integer.toString(num)));
     //log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
     System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
   }
@@ -101,10 +101,10 @@ public class Lex {
         if (eop) {
           break;
         }
-        if (isBlock && !eop) {
-          log(LOG.WARNING, "there is no $ in the program");
-          eop = true; //Auto fix the warning to make the program go on
-        }
+//        if (isBlock && !eop) {
+//          log(LOG.WARNING, "there is no $ in the program");
+//          eop = true; //Auto fix the warning to make the program go on
+//        }
         break;
       }
 
@@ -133,6 +133,7 @@ public class Lex {
           } else if (ch == '=') {
             if (i+1 < len && line.charAt(i+1) == '=') {
               createToken("==");
+              i++;
             } else {
               createToken("=");
             }
@@ -140,6 +141,7 @@ public class Lex {
           } else if (ch == '!') {
             if (i+1 < len && line.charAt(i+1) == '=') {
               createToken("!=");
+              i++;
             } else {
               err++;
               log(LOG.ERROR, "Unrecognized Token: " + ch + " suggestion: please use the correct operator!");

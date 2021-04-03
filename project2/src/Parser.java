@@ -162,10 +162,13 @@ public class Parser {
     LOG("parseIntExpr()");
     Node node = tree.addBranchNode("<Int Expression>");
     if (currentToken.type.equals("digit")) {
-      this.match(node,"digit");
+      this.match(node, "digit");
       if (currentToken.type.equals("+")) {
         this.match(node,"+");
         this.parseExpr();
+      } else {
+        this.parseIntExpr();
+        tree.endChildren();
       }
     }
     tree.endChildren();
