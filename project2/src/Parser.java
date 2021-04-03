@@ -73,15 +73,15 @@ public class Parser {
 
   public void parseStatement() {
     LOG("parseStatement()");
-    if (currentToken.type == "print") {
+    if (currentToken.type.equals("print")) {
       this.parsePrintStatement();
-    } else if (currentToken.type == "string" ||
-               currentToken.type == "int" ||
-               currentToken.type == "boolean") {
+    } else if (currentToken.type.equals("string") ||
+               currentToken.type.equals("int") ||
+               currentToken.type.equals("boolean")) {
       this.parseVarDecl();
-    } else if (currentToken.type == "while") {
+    } else if (currentToken.type.equals("while")) {
       this.parseWhileStatement();
-    } else if (currentToken.type == "if") {
+    } else if (currentToken.type.equals("if")) {
       this.parseIfStatement();
     } else {
       this.parseBlock();
@@ -111,13 +111,13 @@ public class Parser {
   public void parseVarDecl() {
     LOG("parseVarDecl()");
     Node node = tree.addBranchNode("<var>");
-    if (currentToken.type == "int") {
+    if (currentToken.type.equals("int")) {
       this.match(node,"int");
       this.parseId();
-    } else if (currentToken.type == "string") {
+    } else if (currentToken.type.equals("string")) {
       this.match(node,"string");
       this.parseId();
-    } else if (currentToken.type == "boolean") {
+    } else if (currentToken.type.equals("boolean")) {
       this.match(node,"boolean");
       this.parseId();
     }
@@ -147,13 +147,13 @@ public class Parser {
     tree.addBranchNode("<Expression>");
     if (currentToken.type == "digit") {
       this.parseIntExpr();
-    } else if (currentToken.type == "\"") {
+    } else if (currentToken.type.equals("\"")) {
       this.parseStringExpr();
-    } else if (currentToken.type == "(" ||
-               currentToken.type == "true" ||
-               currentToken.type == "false") {
+    } else if (currentToken.type.equals("(") ||
+               currentToken.type.equals("true") ||
+               currentToken.type.equals("false")) {
       this.parseBooleanExpr();
-    } else if (currentToken.type == "id") {
+    } else if (currentToken.type.equals("ID")) {
       this.parseId();
     }
   }
@@ -161,9 +161,9 @@ public class Parser {
   public void parseIntExpr() {
     LOG("parseIntExpr()");
     Node node = tree.addBranchNode("<Int Expression>");
-    if (currentToken.type == "digit") {
+    if (currentToken.type.equals("digit")) {
       this.match(node,"digit");
-      if (currentToken.type == "+") {
+      if (currentToken.type.equals("+")) {
         this.match(node,"+");
         this.parseExpr();
       }
@@ -183,19 +183,19 @@ public class Parser {
   public void parseBooleanExpr() {
     LOG("parseBooleanExpr()");
     Node node = tree.addBranchNode("<Boolean Expression>");
-    if (currentToken.type == "true") {
+    if (currentToken.type.equals("true")) {
       this.match(node,"true");
-    } else if (currentToken.type == "false") {
+    } else if (currentToken.type.equals("false")) {
       this.match(node,"false");
     } else {
       this.match(node,"(");
       this.parseExpr();
 
-      if (currentToken.type == "==") {
+      if (currentToken.type.equals("==")) {
         this.match(node,"==");
         this.parseExpr();
         this.match(node,")");
-      } else if (currentToken.type == "!=") {
+      } else if (currentToken.type.equals("!=")) {
         this.match(node,"!=");
         this.parseExpr();
         this.match(node, ")");
@@ -213,12 +213,12 @@ public class Parser {
 
   public void parseCharList() {
     LOG("parseCharList()");
-    if (currentToken.type == "char") {
+    if (currentToken.type.equals("char")) {
       Node node = tree.addBranchNode("<Char List>");
       this.match(node,"char");
       this.parseCharList();
       tree.endChildren();
-    } else if (currentToken.type == "space") {
+    } else if (currentToken.type.equals("space")) {
       Node node = tree.addBranchNode("<Char List>");
       this.match(node,"space");
       this.parseCharList();

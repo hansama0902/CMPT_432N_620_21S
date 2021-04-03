@@ -68,13 +68,13 @@ public class Lex {
   public void createToken(String type, String a) {
     tokens.add(new Token(type, lineNum, linePos+1));
     //log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
+    System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, int num) {
     tokens.add(new Token(type, lineNum, linePos+1));
     //log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
+    System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void parse(String line) {
@@ -93,7 +93,6 @@ public class Lex {
       System.out.println("LEXER: Lexing program 1 ...");
     } else if (eop){
       System.out.println("LEXER: Lexing program " + lineNum + " ...");
-      eop = false;
     }
 
     STATE state = STATE.DEFAULT;

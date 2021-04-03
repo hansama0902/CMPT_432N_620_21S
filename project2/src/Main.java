@@ -14,7 +14,11 @@ public class Main {
     while(input.hasNext()) {
       line = input.nextLine();
       lex.parse(line);
-      parser.init(lex.getTokens());
+      if (lex.eop) {
+        parser.init(lex.getTokens());
+        lex.eop = false;
+      }
+
     }
 
     input.close();
