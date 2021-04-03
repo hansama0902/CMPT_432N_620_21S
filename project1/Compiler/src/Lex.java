@@ -49,8 +49,8 @@ public class Lex {
   }
 
   public static void log(LOG log , String msg) {
-    
-      System.out.println();  
+
+      System.out.println();
       System.out.println(log + " Lexer - " + msg);
   }
 
@@ -90,7 +90,7 @@ public class Lex {
       if (lineNum == 1 && linePos == 0) {
         log(LOG.INFO, "Lexing program 1 ...");
       }
-      
+
       if (eop) {
         log(LOG.INFO, "Lexing program " + program + " ...");
         eop = false;
@@ -102,10 +102,10 @@ public class Lex {
           if (eop) {
             break;
           }
-          if (isBlock && !eop) {
-            log(LOG.WARNING, "there is no $ in the program");
-            eop = true; //Auto fix the warning to make the program go on
-          }
+        //  if (isBlock && !eop) {
+        //    log(LOG.WARNING, "there is no $ in the program");
+        //    eop = true; //Auto fix the warning to make the program go on
+        //  }
           break;
         }
 
@@ -134,6 +134,7 @@ public class Lex {
             } else if (ch == '=') {
               if (i+1 < len && line.charAt(i+1) == '=') {
                 createToken("==");
+                i++;
               } else {
                 createToken("=");
               }
@@ -141,6 +142,7 @@ public class Lex {
             } else if (ch == '!') {
               if (i+1 < len && line.charAt(i+1) == '=') {
                 createToken("!=");
+                i++;
               } else {
                 err++;
                 log(LOG.ERROR, "Unrecognized Token: " + ch + " suggestion: please use the correct operator!");
@@ -198,7 +200,7 @@ public class Lex {
             }
 
             if (!isKeyword && (ch2 > 'z' || ch2 < 'a') || f >= len) {
-              createToken("char", Character.toString(ch));
+              createToken("ID", Character.toString(ch));
               state = STATE.DEFAULT;
             }
             isKeyword = false;
