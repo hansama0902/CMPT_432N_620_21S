@@ -199,7 +199,7 @@ public class Lex {
           }
 
           if (!isKeyword && (ch2 > 'z' || ch2 < 'a') || f >= len) {
-            createToken("char", Character.toString(ch));
+            createToken("ID", Character.toString(ch));
             state = STATE.DEFAULT;
           }
           isKeyword = false;

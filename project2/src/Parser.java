@@ -83,6 +83,8 @@ public class Parser {
       this.parseWhileStatement();
     } else if (currentToken.type.equals("if")) {
       this.parseIfStatement();
+    } else if (currentToken.type.equals("ID")) {
+      this.parseAssignmentStatement();
     } else {
       this.parseBlock();
     }
