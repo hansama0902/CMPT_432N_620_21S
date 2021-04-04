@@ -1,0 +1,19 @@
+/*These are the test cases for the Lexer.
+The following test case provided headaches outputs before the fix.*/
+
+/*There was a mistake in the error position.*/
+{"two
+lines”}$
+
+
+/*There was an error in Lexer, but it was a 0 error in the last report.*/
+
+for (k == ! 2)
+  int a = k
+  a == s
+
+
+/*After program 1 ends, it is still program 1.*/
+
+{}$	
+{{{{{{}}}}}}$
