@@ -1,3 +1,29 @@
 /* Parse Error: Found Plus on line 1, index 6 when expecting Id */
 
 {int + b}$
+
+/*Parse Error: Found R_Paren on line 1, index 13 when expecting Id*/
+
+{while(b == )}$
+
+/*Parse Error: Found Digit on line 1, index 9 when expecting R_Paren*/
+
+{print(002)}$
+
+/*Parse Error: Found R_Bracket on line 8, index 5 when expecting EOP*/
+{{
+    {{
+        }
+    }
+    {
+    }}
+    }
+    }}
+}}
+$
+
+/* Add <Boolean Expr> - <bool> - [True] */
+{
+    {int    a}
+a = true
+}$
