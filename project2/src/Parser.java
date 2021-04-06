@@ -8,6 +8,7 @@ public class Parser {
   Token currentToken;
   boolean eop = false;
   int program = 1;
+  int err = 0;
   public void LOG(String method) {
     System.out.println("PARSER: " + method);
   }
@@ -212,7 +213,7 @@ public class Parser {
   public void parseId() {
     LOG("parseId()");
     Node node = tree.addBranchNode("<Identifier>");
-    this.match(node,"id");
+    this.match(node,"ID");
     tree.endChildren();
   }
 
@@ -234,6 +235,9 @@ public class Parser {
   public void match(Node node, String type) {
     if(currentToken.type.equals(type)) {
       tree.addLeafNode(node, currentToken);
+    } else {
+      System.out.println("Parser Error: Found " + currentToken.type + " at " + currentToken.line + " " + currentToken.index);
+      err++;
     }
     if (tokenIndex + 1 < ntokens.size()) {
       currentToken = ntokens.get(tokenIndex + 1);
