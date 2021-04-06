@@ -1,0 +1,17 @@
+/*Parse Error: Found Digit on line 1, index 9 when expecting R_Paren*/
+
+{print(002)}$
+
+Parse Error: Found Digit on line 2, index 8 when expecting R_Paren
+
+parse: Program
+
+parse: Block
+parse: Statement List
+parse: Statement
+parse: Print Statement
+parse: Expression
+parse: Int Expression
+parse: Digit
+Parse Error: Found Digit on line 2, index 8 when expecting R_Paren
+ 
