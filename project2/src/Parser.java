@@ -32,17 +32,28 @@ public class Parser {
     this.parseProgram();
   }
 
+  public void endProgram() {
+    if (err == 0) {
+      LOG("Parse completed successfully\n\n");
+      tree.printString(program);
+    } else {
+      System.out.println("\n\n");
+      System.out.println(err + " Parser Errors detected in program " + program);
+      System.out.println("Skipping CST due to Parse Error!");
+    }
+    eop = true;
+    program++;
+  }
+
   public void parseProgram() {
     LOG("parserProgram()");
     Node node = tree.addBranchNode("<Program>");
     this.parseBlock();
     this.match(node,"$");
-    LOG("Parse completed successfully\n\n");
     tree.endChildren();
-    tree.printString(program);
-    eop = true;
-    program++;
+    this.endProgram();
   }
+
 
   public void parseBlock() {
     LOG("parseBlock()");
@@ -167,11 +178,8 @@ public class Parser {
     if (currentToken.type.equals("digit")) {
       this.match(node, "digit");
       if (currentToken.type.equals("+")) {
-        this.match(node,"+");
+        this.match(node, "+");
         this.parseExpr();
-      } else {
-        this.parseIntExpr();
-        tree.endChildren();
       }
     }
     tree.endChildren();
@@ -236,7 +244,8 @@ public class Parser {
     if(currentToken.type.equals(type)) {
       tree.addLeafNode(node, currentToken);
     } else {
-      System.out.println("Parser Error: Found " + currentToken.type + " at " + currentToken.line + " " + currentToken.index);
+      System.out.println("Parser Error: Found " + currentToken.type + " at line " + currentToken.line + " index " + currentToken.index +
+                         " Expecting " + type);
       err++;
     }
     if (tokenIndex + 1 < ntokens.size()) {
