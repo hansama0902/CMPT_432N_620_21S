@@ -18,10 +18,10 @@ public class Parser {
     tree = new Tree();
     currentToken = ntokens.get(tokenIndex);
 
-    if (currentToken.line == 1) {
+    if (program == 1) {
       System.out.println("PARSER: Parsing program 1...");
     } else if (eop){
-      System.out.println("PARSER: Parsing program " + currentToken.line +"...");
+      System.out.println("PARSER: Parsing program " + program +"...");
       eop = false;
     }
     this.parse();
