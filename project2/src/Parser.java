@@ -244,8 +244,14 @@ public class Parser {
     if(currentToken.type.equals(type)) {
       tree.addLeafNode(node, currentToken);
     } else {
-      System.out.println("Parser Error: Found " + currentToken.type + " at line " + currentToken.line + " index " + currentToken.index +
-                         " Expecting " + type);
+      if (currentToken.type.equals("digit")) {
+        String tmp = type + " or + ";
+        System.out.println("Parser Error: Found " + currentToken.type + " at line " + currentToken.line + " index " + currentToken.index +
+                " Expecting " + tmp);
+      } else {
+        System.out.println("Parser Error: Found " + currentToken.type + " at line " + currentToken.line + " index " + currentToken.index +
+                " Expecting " + type);
+      }
       err++;
     }
     if (tokenIndex + 1 < ntokens.size()) {
