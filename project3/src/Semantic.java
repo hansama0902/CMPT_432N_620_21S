@@ -1,19 +1,30 @@
 import java.util.LinkedList;
 
 public class Semantic {
+  // AST tree
   Tree ast;
   LinkedList<Scope> scopes;
   int scopeName;
+
+  // Tree node
   Node astNode;
+
+  // program counter
   int program = 1;
+
+  // end of program
   boolean eop = false;
+
+  // error number
   int err = 0;
 
+  /*
+   * start to semantic analysis
+   */
   public void initAnalysis(Parser parser) {
     this.scopes = new LinkedList<>();
     this.ast = new Tree();
     this.scopeName = 0;
-
 
     if (program == 1) {
       System.out.println("Program 1 Semantic Analysis");
