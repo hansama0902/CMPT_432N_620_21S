@@ -16,11 +16,11 @@ public class Main {
       lex.parse(line);
       if (lex.eop) {
         parser.init(lex.getTokens());
+        semantic.initAnalysis(parser);
         lex.eop = false;
 
       }
     }
-    semantic.initAnalysis(parser);
 
     input.close();
   }

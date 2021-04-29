@@ -20,7 +20,7 @@ public class Node {
       this.type = type;
     }
     this.value = "";
-    this.children = null;
+    this.children = new LinkedList<Node>();
     this.parent = null;
     this.lineNumber = 0;
     this.isLeafNode = false;

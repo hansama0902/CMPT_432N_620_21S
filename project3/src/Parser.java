@@ -85,6 +85,7 @@ public class Parser {
 
   public void parseStatement() {
     LOG("parseStatement()");
+    tree.addBranchNode("<Statement>");
     if (currentToken.type.equals("print")) {
       this.parsePrintStatement();
     } else if (currentToken.type.equals("string") ||
@@ -100,6 +101,7 @@ public class Parser {
     } else {
       this.parseBlock();
     }
+    tree.endChildren();
 
   }
 

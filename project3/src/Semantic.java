@@ -24,6 +24,12 @@ public class Semantic {
     this.ast.printString(program);
   }
 
+  public void printString(int program) {
+    System.out.println("Program\t1\tSymbol\tTable");
+    System.out.println("--------------------------------------");
+    System.out.println("Name\t Type\t Scope\t Line");
+  }
+
   public void buildAST(Node root) {
     this.analysisProgram(root);
   }
@@ -36,7 +42,7 @@ public class Semantic {
 
   public void analysisBlock(Node cstNode, Scope scope, Node astNode) {
     Node node = new Node("Block");
-    if (this.ast != null) {
+    if (this.ast.getRoot() != null) {
       astNode.addChild(node);
       astNode = node;
       Scope newScope = new Scope(this.scopeName);
@@ -60,7 +66,7 @@ public class Semantic {
   }
 
   public void analyzeStatementList(Node cstNode, Node astNode, Scope scope) {
-    if (cstNode == null) {
+    if (cstNode == null || cstNode.children.size() == 0) {
       return ;
     }
 
@@ -90,7 +96,7 @@ public class Semantic {
 
   public void analysisVarStatement(Node cstNode, Node astNode, Scope scope) {
     Node newNode = new Node("Variable");
-    Node type = new Node(cstNode.children.get(0).getValue());
+    Node type = new Node(cstNode.children.get(0).getType());
     Node value = new Node(cstNode.children.get(1).children.get(0).getValue());
     newNode.addChild(type);
     newNode.addChild(value);

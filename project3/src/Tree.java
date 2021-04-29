@@ -84,7 +84,9 @@ public class Tree {
     {
       tmp += "-" ;
     }
-
+    if (node == null) {
+      return ;
+    }
     if (node.children.isEmpty() || node.children.size() == 0)
     {
       tmp += "[ " + node.type + " ]";
@@ -103,7 +105,6 @@ public class Tree {
   }
   public void printString(int program) {
     StringBuilder res = new StringBuilder();
-    System.out.println("CST for program " + program + "…");
     traverse(this.root, 0, res);
     System.out.println(res);
   }
