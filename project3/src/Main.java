@@ -7,7 +7,7 @@ public class Main {
     System.out.println("please input your program : ");
     Lex lex = new Lex();
     Parser parser = new Parser();
-
+    Semantic semantic = new Semantic();
     lex.initTokenKind();
     Scanner input = new Scanner(System.in);
     String line;
@@ -20,6 +20,7 @@ public class Main {
 
       }
     }
+    semantic.initAnalysis(parser);
 
     input.close();
   }
