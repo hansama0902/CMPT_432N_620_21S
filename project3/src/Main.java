@@ -17,6 +17,13 @@ public class Main {
       if (lex.eop) {
         parser.init(lex.getTokens());
         semantic.initAnalysis(parser);
+        System.out.println("Program " + parser.program + " Concrete Syntax Tree");
+        System.out.println("----------------------------------------------------");
+        parser.tree.printString(parser.program);
+
+        System.out.println("Program " + parser.program + " Abstract Syntax Tree");
+        System.out.println("----------------------------------------------------");
+        semantic.ast.printString(semantic.program);
         lex.eop = false;
 
       }

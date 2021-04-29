@@ -10,7 +10,7 @@ public class Parser {
   int program = 1;
   int err = 0;
   public void LOG(String method) {
-    System.out.println("PARSER: " + method);
+    //System.out.println("PARSER: " + method);
   }
 
   public void init(ArrayList<Token> tokens) {
@@ -19,9 +19,9 @@ public class Parser {
     currentToken = ntokens.get(tokenIndex);
 
     if (program == 1) {
-      System.out.println("PARSER: Parsing program 1...");
+      System.out.println("Program 1 Parsing");
     } else if (eop){
-      System.out.println("PARSER: Parsing program " + program +"...");
+      System.out.println("Program " + program +" Parsing");
       eop = false;
     }
     this.parse();
@@ -34,11 +34,10 @@ public class Parser {
 
   public void endProgram() {
     if (err == 0) {
-      LOG("Parse completed successfully\n\n");
-      tree.printString(program);
+      System.out.println("Program " + program + "Parsing produced 0 error(s) and 0 warning(s)\n\n");
     } else {
       System.out.println("\n\n");
-      System.out.println(err + " Parser Errors detected in program " + program);
+      System.out.println("Program " + program + " Parsing produced " + err + " error(s)");
       System.out.println("Skipping CST due to Parse Error!");
     }
     eop = true;

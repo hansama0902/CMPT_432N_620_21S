@@ -62,19 +62,19 @@ public class Lex {
   public void createToken(String type) {
     tokens.add(new Token(type, lineNum, linePos+1));
     //log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
+    //System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, String a) {
     tokens.add(new Token(type, lineNum, linePos+1, a));
     //log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
+    //System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, int num) {
     tokens.add(new Token(type, lineNum, linePos+1, Integer.toString(num)));
     //log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
+    //System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void parse(String line) {
@@ -90,9 +90,9 @@ public class Lex {
     i = 0; f = 0;
 
     if (lineNum == 1 && linePos == 0) {
-      System.out.println("LEXER: Lexing program 1 ...");
+      System.out.println("Program 1 Lexical Analysis");
     } else if (eop){
-      System.out.println("LEXER: Lexing program " + lineNum + " ...");
+      System.out.println("Program " + lineNum + " Lexical Analysis");
     }
 
     STATE state = STATE.DEFAULT;
@@ -119,9 +119,9 @@ public class Lex {
             eop = true;
             program++;
             if (err == 0) {
-              System.out.println("LEXER: Lex completed successfully");
+              System.out.println("Lexical analysis produced 0 error(s) and 0 warning(s)\t");
             } else {
-              log(LOG.ERROR, "Lex failed with " + err + " error(s)");
+              log(LOG.ERROR, "Lexical analysis produced " + err + " error(s)");
             }
             System.out.println("\n");
             err = 0;

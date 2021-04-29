@@ -7,6 +7,7 @@ public class Semantic {
   Node astNode;
   int program = 1;
   boolean eop = false;
+  int err = 0;
 
   public void initAnalysis(Parser parser) {
     this.scopes = new LinkedList<>();
@@ -15,19 +16,31 @@ public class Semantic {
 
 
     if (program == 1) {
-      System.out.println("Program 1 Abstract Syntax Tree");
+      System.out.println("Program 1 Semantic Analysis");
     } else if (eop){
-      System.out.println("Program " + program + "Abstract Syntax Tree");
+      System.out.println("Program " + program +" Semantic Analysis");
       eop = false;
     }
     this.buildAST(parser.tree.getRoot());
-    this.ast.printString(program);
+    //this.ast.printString(program);
   }
 
   public void printString(int program) {
     System.out.println("Program\t1\tSymbol\tTable");
     System.out.println("--------------------------------------");
     System.out.println("Name\t Type\t Scope\t Line");
+  }
+
+  public void endProgram() {
+    if (err == 0) {
+      System.out.println("Program " + program + "Semantic Analysis produced 0 error(s) and 0 warning(s)\n\n");
+    } else {
+      System.out.println("\n\n");
+      System.out.println("Program " + program + "Semantic Analysis produced " + err + " error(s)");
+      System.out.println("Skipping CST due to Parse Error!");
+    }
+    eop = true;
+    program++;
   }
 
   public void buildAST(Node root) {
@@ -38,6 +51,7 @@ public class Semantic {
     Scope scope = new Scope(this.scopeName);
     this.scopeName++;
     this.analysisBlock(root.children.get(0),scope, this.astNode);
+    this.endProgram();
   }
 
   public void analysisBlock(Node cstNode, Scope scope, Node astNode) {
@@ -115,7 +129,7 @@ public class Semantic {
   }
 
   public void analysisIfStatement(Node cstNode, Node astNode, Scope scope) {
-    Node newNode = new Node("Print Statement");
+    Node newNode = new Node("If Statement");
     astNode.addChild(newNode);
     astNode = newNode;
     this.analysisBooleanExpression(cstNode.children.get(1), astNode, scope);
