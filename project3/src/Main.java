@@ -17,8 +17,8 @@ public class Main {
       if (lex.eop) {
         parser.init(lex.getTokens());
         lex.eop = false;
-      }
 
+      }
     }
 
     input.close();
