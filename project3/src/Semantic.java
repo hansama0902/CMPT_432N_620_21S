@@ -21,6 +21,7 @@ public class Semantic {
       eop = false;
     }
     this.buildAST(parser.tree.getRoot());
+    this.ast.printString(program);
   }
 
   public void buildAST(Node root) {
