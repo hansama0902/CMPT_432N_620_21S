@@ -34,7 +34,7 @@ public class Parser {
 
   public void endProgram() {
     if (err == 0) {
-      System.out.println("Program " + program + "Parsing produced 0 error(s) and 0 warning(s)\n\n");
+      System.out.println("Program " + program + " Parsing produced 0 error(s) and 0 warning(s)\n\n");
     } else {
       System.out.println("\n\n");
       System.out.println("Program " + program + " Parsing produced " + err + " error(s)");
@@ -65,7 +65,7 @@ public class Parser {
 
   public void parseStatementList() {
     LOG("parseStatementList()");
-    tree.addBranchNode("<Statement List>");
+
     if (currentToken.type.equals( "print" ) ||
             currentToken.type.equals( "ID" )||
             currentToken.type.equals( "int" )||
@@ -75,11 +75,12 @@ public class Parser {
             currentToken.type.equals( "while" ) ||
             currentToken.type.equals( "if" )
     ) {
-
+      tree.addBranchNode("<Statement List>");
       this.parseStatement();
       this.parseStatementList();
+      tree.endChildren();
     }
-    tree.endChildren();
+
   }
 
   public void parseStatement() {

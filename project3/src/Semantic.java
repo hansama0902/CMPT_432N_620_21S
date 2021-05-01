@@ -94,9 +94,13 @@ public class Semantic {
     if (cstNode == null || cstNode.children.size() == 0) {
       return ;
     }
+    if (cstNode.children.size() >= 2) {
+      this.analyzeStatement(cstNode.children.get(0), astNode, scope);
+      this.analyzeStatementList(cstNode.children.get(1), astNode, scope);
+    } else {
+      this.analyzeStatement(cstNode.children.get(0), astNode, scope);
+    }
 
-    this.analyzeStatement(cstNode.children.get(0), astNode, scope);
-    this.analyzeStatementList(cstNode.children.get(1), astNode, scope);
   }
 
   public void analyzeStatement(Node cstNode, Node astNode, Scope scope) {
@@ -156,7 +160,7 @@ public class Semantic {
     astNode.addChild(newNode);
     astNode = newNode;
 
-    this.analysisExpression(cstNode.children.get(0), astNode, scope);
+    this.analysisExpression(cstNode.children.get(2), astNode, scope);
   }
 
   public void analysisPrintStatement(Node cstNode, Node astNode, Scope scope) {
@@ -185,6 +189,16 @@ public class Semantic {
       Node value = new Node(cstNode.children.get(0).getValue());
       value.setInt(true);
       astNode.addChild(value);
+    } else {
+      Node value = new Node(cstNode.children.get(0).getValue());
+      value.setInt(true);
+      astNode.addChild(value);
+
+      Node plus = new Node("+");
+      astNode.addChild(plus);
+      astNode = plus;
+
+      this.analysisExpression(cstNode.children.get(2), astNode, scope);
     }
   }
   public void analysisStringExpression(Node cstNode, Node astNode, Scope scope) {
