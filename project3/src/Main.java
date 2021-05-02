@@ -18,15 +18,21 @@ public class Main {
         parser.init(lex.getTokens());
         semantic.initAnalysis(parser);
 
-        System.out.println("Program " + parser.program + " Concrete Syntax Tree");
+        System.out.println("Program " + (parser.program - 1) + " Concrete Syntax Tree");
         System.out.println("----------------------------------------------------");
         parser.tree.printString(parser.program);
 
-        System.out.println("Program " + parser.program + " Abstract Syntax Tree");
+        System.out.println("Program " + (parser.program - 1) + " Abstract Syntax Tree");
         System.out.println("----------------------------------------------------");
         semantic.ast.printString(semantic.program);
         lex.eop = false;
 
+        if (semantic.flag) {
+          semantic.printScopeString();
+        } else {
+          System.out.println("not produced due to error(s) detected by semantic analysis.");
+          semantic.flag = true;
+        }
       }
     }
 

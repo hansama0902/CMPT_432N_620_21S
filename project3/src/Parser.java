@@ -65,7 +65,7 @@ public class Parser {
 
   public void parseStatementList() {
     LOG("parseStatementList()");
-
+    tree.addBranchNode("<Statement List>");
     if (currentToken.type.equals( "print" ) ||
             currentToken.type.equals( "ID" )||
             currentToken.type.equals( "int" )||
@@ -75,11 +75,12 @@ public class Parser {
             currentToken.type.equals( "while" ) ||
             currentToken.type.equals( "if" )
     ) {
-      tree.addBranchNode("<Statement List>");
+
       this.parseStatement();
       this.parseStatementList();
-      tree.endChildren();
+
     }
+    tree.endChildren();
 
   }
 

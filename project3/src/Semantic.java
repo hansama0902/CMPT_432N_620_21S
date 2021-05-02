@@ -4,7 +4,7 @@ public class Semantic {
   // AST tree
   Tree ast;
   LinkedList<Scope> scopes;
-  int scopeName;
+  int scopeline;
 
   // Tree node
   Node astNode;
@@ -18,13 +18,16 @@ public class Semantic {
   // error number
   int err = 0;
 
+  // flag
+  boolean flag = true;
+
   /*
    * start to semantic analysis
    */
   public void initAnalysis(Parser parser) {
     this.scopes = new LinkedList<>();
     this.ast = new Tree();
-    this.scopeName = 0;
+    this.scopeline = 0;
 
     if (program == 1) {
       System.out.println("Program 1 Semantic Analysis");
@@ -33,25 +36,31 @@ public class Semantic {
       eop = false;
     }
     this.buildAST(parser.tree.getRoot());
+    this.endProgram();
     //this.ast.printString(program);
   }
 
-  public void printString(int program) {
-    System.out.println("Program\t1\tSymbol\tTable");
+  public void printScopeString() {
+    System.out.println("Program " + (program - 1) + " Symbol Table");
     System.out.println("--------------------------------------");
-    System.out.println("Name\t Type\t Scope\t Line");
+    System.out.println("Name Type Scope Line");
+    for (int i = 0; i < scopes.size(); i++) {
+      scopes.get(scopes.size() - 1 - i).printString();
+    }
   }
 
   public void endProgram() {
     if (err == 0) {
-      System.out.println("Program " + program + "Semantic Analysis produced 0 error(s) and 0 warning(s)\n\n");
+      System.out.println("Program " + program + " Semantic Analysis produced 0 error(s) and 0 warning(s)\n\n");
     } else {
       System.out.println("\n\n");
-      System.out.println("Program " + program + "Semantic Analysis produced " + err + " error(s)");
+      System.out.println("Program " + program + " Semantic Analysis produced " + err + " error(s)");
       System.out.println("Skipping CST due to Parse Error!");
+      flag = false;
     }
     eop = true;
     program++;
+    err = 0;
   }
 
   public void buildAST(Node root) {
@@ -59,10 +68,9 @@ public class Semantic {
   }
 
   public void analysisProgram(Node root) {
-    Scope scope = new Scope(this.scopeName);
-    this.scopeName++;
-    this.analysisBlock(root.children.get(0),scope, this.astNode);
-    this.endProgram();
+    Scope scope = new Scope(this.scopeline);
+    this.scopeline++;
+    this.analysisBlock(root.children.get(0), scope, this.astNode);
   }
 
   public void analysisBlock(Node cstNode, Scope scope, Node astNode) {
@@ -70,8 +78,8 @@ public class Semantic {
     if (this.ast.getRoot() != null) {
       astNode.addChild(node);
       astNode = node;
-      Scope newScope = new Scope(this.scopeName);
-      this.scopeName++;
+      Scope newScope = new Scope(this.scopeline);
+      this.scopeline++;
       newScope.setParent(scope);
       this.scopes.push(newScope);
 
@@ -130,8 +138,10 @@ public class Semantic {
     newNode.addChild(type);
     newNode.addChild(value);
     astNode.addChild(newNode);
-    Symbol newSymbol = new Symbol(cstNode.children.get(1).children.get(0).getValue(), cstNode.children.get(0).getValue(), cstNode.children.get(0).getLineNumber());
+    //Add the symbol to symbol table
+    Symbol newSymbol = new Symbol(cstNode.children.get(1).children.get(0).getValue(), cstNode.children.get(0).getType(), cstNode.children.get(0).getLineNumber());
     scope.addSymbol(newSymbol);
+    System.out.println("decalare " + newSymbol.name + " " + newSymbol.line + " " + newSymbol.type);
   }
 
   public void analysisWhileStatement(Node cstNode, Node astNode, Scope scope) {
@@ -161,6 +171,12 @@ public class Semantic {
     astNode = newNode;
 
     this.analysisExpression(cstNode.children.get(2), astNode, scope);
+
+    boolean flag = scope.findId(cstNode.children.get(0).children.get(0).getValue());
+    if (!flag) {
+      err++;
+      System.out.println("ID not in scope, breaking.");
+    }
   }
 
   public void analysisPrintStatement(Node cstNode, Node astNode, Scope scope) {
@@ -182,6 +198,13 @@ public class Semantic {
       Node id = new Node(cstNode.children.get(0).children.get(0).getValue());
       id.setIdentifier(true);
       astNode.addChild(id);
+
+      boolean flag = scope.findId(cstNode.children.get(0).children.get(0).getValue());
+      if (!flag) {
+        err++;
+        System.out.println("ID not in scope, breaking.");
+
+      }
     }
   }
   public void analysisIntExpression(Node cstNode, Node astNode, Scope scope) {
@@ -201,6 +224,7 @@ public class Semantic {
       this.analysisExpression(cstNode.children.get(2), astNode, scope);
     }
   }
+
   public void analysisStringExpression(Node cstNode, Node astNode, Scope scope) {
     if (cstNode.children.size() > 2) {
       this.analysisCharList(cstNode.children.get(1), astNode, "", scope);
@@ -209,6 +233,7 @@ public class Semantic {
       astNode.addChild(newNode);
     }
   }
+
   public void analysisBooleanExpression(Node cstNode, Node astNode, Scope scope) {
     if (cstNode.children.size() > 1) {
       Node newNode = new Node(cstNode.children.get(0).getValue());
