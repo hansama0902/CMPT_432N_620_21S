@@ -1,0 +1,37 @@
+/*
+Should be
+<Block>
+-<Var Decl>
+--[Int]
+--[a]
+-<Block>
+--<Assignment>
+---[a]
+---[1]
+-<Print>
+--[a]
+
+Symbol Table
+Id: a     Type: Int      Scope: 0
+ */
+{int a {a=1 print(a)} }$
+
+
+/*
+Should be
+Semantic Warning: Variable k in scope 2 used on line 1 index 31 but not initialized.
+
+<Block>
+-<Var Decl>
+--[String]
+--[k]
+-<Block>
+--<Assignment>
+---[k]
+---[tricky]
+-<Block>
+--<Print>
+---[k]
+
+*/
+{string k {k="tricky"} {print(k)} }$

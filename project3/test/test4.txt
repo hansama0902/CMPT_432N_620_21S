@@ -1,0 +1,67 @@
+/*
+Semantic Warning: Variable c in scope 0 used on line 1 index 34 but not initialized.
+
+Semantic Warning: Variable b in scope 0 used on line 1 index 38 but not initialized.
+
+Semantic Warning: Variable a in scope 0 used on line 1 index 42 but not initialized.
+
+Semantic Warning: Variable c in scope 0 used on line 1 index 45 but not initialized.
+
+Semantic Error: Type Mismatch in boolean expression statement in scope 0
+Semantic Error: Type Mismatch in boolean expression statement in scope 0
+<Block>
+-<Var Decl>
+--[Int]
+--[a]
+-<Var Decl>
+--[String]
+--[b]
+-<Var Decl>
+--[Boolean]
+--[c]
+-<While>
+--<Equal>
+---[c]
+---<Equal>
+----[b]
+----<Equal>
+-----[a]
+-----[c]
+--[Block]
+Detected 2 Semantic Errors. Skipping Symbol Table */
+
+{int a string b boolean c while (c==(b==(a==c))) {} }$
+
+/*
+Semantic Warning: Variable b in scope 0 used on line 1 index 33 but not initialized.
+
+<Block>
+-<Var Decl>
+--[Int]
+--[a]
+-<Var Decl>
+--[String]
+--[b]
+-<Var Decl>
+--[Boolean]
+--[c]
+-<Print>
+--[b]
+-<Assignment>
+--[c]
+--[True]
+
+Symbol Table
+Id: a     Type: Int      Scope: 0
+Id: b     Type: String   Scope: 0
+Id: c     Type: Boolean  Scope: 0
+
+Semantic Warning: Variable a in scope 0 declared but not used or initialized.
+Semantic Warning: Variable c in scope 0 initialized but not used.
+*/
+{int a string b boolean c print(b) c=true}$
+
+
+
+
+
