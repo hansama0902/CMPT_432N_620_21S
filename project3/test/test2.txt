@@ -1,14 +1,3 @@
-/* Should be
-Semantic Error: Variable a used before declared on line 1 index 17
-<Block>
--<Block>
---<Var Decl>
----[Int]
----[a]
--<Print>
---[a]
-Detected 1 Semantic Errors. Skipping Symbol Table 
-*/
 
 /*Testing use of undeclared identifiers in a scope when declared in another scope*/
 

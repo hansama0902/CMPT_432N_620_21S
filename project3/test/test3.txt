@@ -25,15 +25,16 @@ Semantic Warning: Variable a in scope 1 declared but not used or initialized.
 {int a {a=1 print(a) string a} }$
 
 /* Test the detection of redeclared identifiers */
+
 { int a string a print(a) }$
 
+/* 
+Should be
 Semantic Error: Type mismatch variable a on line 1 index 8 expecting String, got Int
 Semantic Error: Type mismatch variable a on line 1 index 15 expecting Boolean, got Int
 Semantic Error: Type mismatch variable a on line 1 index 22 expecting Boolean, got Int
 Semantic Warning: Variable a in scope 0 used on line 1 index 36 but not initialized.
 
-/* 
-Should be
 <Block>
 -<Var Decl>
 --[Int]
