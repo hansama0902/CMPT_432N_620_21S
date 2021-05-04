@@ -173,6 +173,7 @@ public class Parser {
     } else if (currentToken.type.equals("ID")) {
       this.parseId();
     }
+    tree.endChildren();
   }
 
   public void parseIntExpr() {

@@ -118,7 +118,6 @@ public class Semantic {
       this.analysisPrintStatement(cstNode.children.get(0), astNode, scope);
     } else if (type.equals("<Assignment Statement>")) {
       this.analysisAssignmentStatement(cstNode.children.get(0), astNode, scope);
-
     } else if (type.equals("<var>")) {
       this.analysisVarStatement(cstNode.children.get(0), astNode, scope);
     } else if (type.equals("<While Statement>")) {
