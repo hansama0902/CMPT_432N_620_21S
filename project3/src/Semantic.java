@@ -247,7 +247,7 @@ public class Semantic {
 
   public void analysisBooleanExpression(Node cstNode, Node astNode, Scope scope) {
     if (cstNode.children.size() > 1) {
-      Node newNode = new Node(cstNode.children.get(2).getValue());
+      Node newNode = new Node(cstNode.children.get(2).getType());
       astNode.addChild(newNode);
       astNode = newNode;
 
