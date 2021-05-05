@@ -24,6 +24,8 @@ public class Node {
     this.parent = null;
     this.lineNumber = 0;
     this.isLeafNode = false;
+    this.isBoolean = false;
+    this.isInt = false;
   }
 
   public String getType() {

@@ -1,12 +1,19 @@
 import java.util.LinkedList;
 
 public class Scope {
+  //scope number
   int number;
+
+  // previouse scope
   Scope parent;
 
+  // next scopes
   LinkedList<Scope> children;
+
+  // symbols in the scope
   LinkedList<Symbol> symbols;
 
+  //constructor
   public Scope(int num) {
     this.number = num;
     this.parent = null;
@@ -34,14 +41,16 @@ public class Scope {
     return symbols;
   }
 
-  public void addSymbol(Symbol symbol) {
+  // add the symbol in the scope
+  public boolean addSymbol(Symbol symbol) {
     String id = symbol.getName();
     boolean flag = this.findIdInCurrentScope(id);
     if (!flag) {
       this.symbols.push(symbol);
+      return true;
     } else {
-      System.out.println("Identifier '" + id + "' already declared in scope."+ symbol.getLine() + "Semantic Analyzer");
-      throw new Error("ID already in scope");
+      System.out.println("Semantic Error: Identifier '" + id + "' already declared on "+ symbol.getLine());
+      return false;
     }
   }
 
@@ -55,18 +64,79 @@ public class Scope {
 
   public void printString() {
     for (int i = 0; i < symbols.size(); i++) {
-      if(symbols.get(i).isInitialized) {
-        System.out.println(symbols.get(i).name + " " + symbols.get(i).type + " " +
-                           this.number + " " + symbols.get(i).line);
-      } else {
-        System.out.println(symbols.get(i).name + " was not initialized at " + symbols.get(i).line);
+      if(!symbols.get(i).isInitialized)  {
+        System.out.println("\nSemantic Warning: " + symbols.get(i).type + " " + symbols.get(i).name + " was not initialized at " + symbols.get(i).line +
+                            " scope" + number);
       }
+      System.out.println(symbols.get(i).name + " " + symbols.get(i).type + " " +
+                           this.number + " " + symbols.get(i).line);
+
     }
   }
 
+
+  public String getTypeOfSymbol(String id) {
+    for (int i = 0; i < this.symbols.size(); i++) {
+      if (this.symbols.get(i).getName().equals(id)) {
+        return this.symbols.get(i).getType();
+      }
+    }
+
+    if (this.getParent() != null) {
+      return this.getTypeOfSymbolInScope(id, this.getParent());
+    }
+    return "";
+  }
+
+  public String getTypeOfSymbolInScope(String id, Scope scope) {
+    for (int i = 0; i < scope.symbols.size(); i++) {
+      if (scope.symbols.get(i).getName().equals(id)) {
+        return scope.symbols.get(i).getType();
+      }
+    }
+
+    if (scope.getParent() != null) {
+      return this.getTypeOfSymbolInScope(id, scope.getParent());
+    }
+    return "";
+  }
+
+  private boolean isNaN(String value) {
+    //Todo: Implement
+    return false;
+  }
+
+  /*
+   * check type in current scope
+   */
+  public boolean checkType(String id, Node node)  {
+    String type = this.getTypeOfSymbol(id);
+    String value = node.type;
+
+    if (node.isIdentifier()) {
+      String idType = this.getTypeOfSymbol(node.getType());
+      return type.equals(idType);
+    } else if (type.equals("int")) {
+      return !isNaN(value);
+    } else if (type.equals("string")) {
+      if (value.equals("true") || value.equals("false")) {
+        return !node.isBoolean();
+      }
+      if (node.isInt()) {
+        return false;
+      }
+      return true;
+    } else if (type.equals("boolean")){
+      return node.isBoolean();
+    } else {
+      return false;
+    }
+
+  }
+
+
   public boolean findId(String id) {
     for (int i = 0; i < this.symbols.size(); i++) {
-      System.out.println("symbol name" + this.symbols.get(i).getName() + " " + id);
       if (this.symbols.get(i).getName().equals(id)) {
         this.symbols.get(i).setInitialized(true);
         return true;
@@ -82,7 +152,6 @@ public class Scope {
 
   public boolean findIdInScope(String id, Scope scope) {
     for (int i = 0; i < scope.symbols.size(); i++) {
-      System.out.println("symbol name" + scope.symbols.get(i).getName() + " " + id);
       if (scope.symbols.get(i).getName().equals(id)) {
         scope.symbols.get(i).setInitialized(true);
         return true;
@@ -97,6 +166,7 @@ public class Scope {
   }
 
   /*
+   * lookup id in current scope
    * @param id : String
    */
   public boolean findIdInCurrentScope(String id) {

@@ -40,6 +40,7 @@ public class Semantic {
     //this.ast.printString(program);
   }
 
+  // print the symbol table
   public void printScopeString() {
     System.out.println("Program " + (program - 1) + " Symbol Table");
     System.out.println("--------------------------------------");
@@ -137,10 +138,12 @@ public class Semantic {
     newNode.addChild(type);
     newNode.addChild(value);
     astNode.addChild(newNode);
+
     //Add the symbol to symbol table
     Symbol newSymbol = new Symbol(cstNode.children.get(1).children.get(0).getValue(), cstNode.children.get(0).getType(), cstNode.children.get(0).getLineNumber());
-    scope.addSymbol(newSymbol);
-    System.out.println("decalare " + newSymbol.name + " " + newSymbol.line + " " + newSymbol.type);
+    if (!scope.addSymbol(newSymbol)) {
+      err++;
+    }
   }
 
   public void analysisWhileStatement(Node cstNode, Node astNode, Scope scope) {
@@ -162,19 +165,28 @@ public class Semantic {
 
   public void analysisAssignmentStatement(Node cstNode, Node astNode, Scope scope) {
     Node newNode = new Node("Assignment Statement");
+
     // Add the identifier to the AST
-    Node id = new Node(cstNode.children.get(0).children.get(0).getValue());
+    String idValue = cstNode.children.get(0).children.get(0).getValue();
+    int line = cstNode.children.get(0).children.get(0).getLineNumber();
+    Node id = new Node(idValue);
     newNode.addChild(id);
-    newNode.setLineNumber(cstNode.children.get(0).children.get(0).getLineNumber());
+    newNode.setLineNumber(line);
     astNode.addChild(newNode);
     astNode = newNode;
 
     this.analysisExpression(cstNode.children.get(2), astNode, scope);
 
-    boolean flag = scope.findId(cstNode.children.get(0).children.get(0).getValue());
+    boolean flag = scope.findId(idValue);
     if (!flag) {
       err++;
-      System.out.println("ID not in scope, breaking.");
+      System.out.println("Semantic Error: ID " + idValue +  " not in scope, ");
+    }
+
+    boolean typeCheck = scope.checkType(idValue, astNode.children.get(1));
+    if (!typeCheck) {
+      System.out.println( "Semantic Error: Type mismatch variable " + idValue  + " on " + line + ".Expecting "+ scope.getTypeOfSymbol(idValue));
+      err++;
     }
   }
 
@@ -201,7 +213,7 @@ public class Semantic {
       boolean flag = scope.findId(cstNode.children.get(0).children.get(0).getValue());
       if (!flag) {
         err++;
-        System.out.println("ID not in scope, breaking.");
+        System.out.println("Semantic Error: ID " + cstNode.children.get(0).children.get(0).getValue() + " not in scope");
 
       }
     }
@@ -235,14 +247,14 @@ public class Semantic {
 
   public void analysisBooleanExpression(Node cstNode, Node astNode, Scope scope) {
     if (cstNode.children.size() > 1) {
-      Node newNode = new Node(cstNode.children.get(0).getValue());
+      Node newNode = new Node(cstNode.children.get(2).getValue());
       astNode.addChild(newNode);
       astNode = newNode;
 
       this.analysisExpression(cstNode.children.get(1), astNode, scope);
       this.analysisExpression(cstNode.children.get(3), astNode, scope);
     } else {
-      Node newNode = new Node(cstNode.children.get(0).getValue());
+      Node newNode = new Node(cstNode.children.get(0).getType());
       newNode.setBoolean(true);
       astNode.addChild(newNode);
     }
