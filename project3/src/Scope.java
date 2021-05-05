@@ -41,6 +41,10 @@ public class Scope {
     return symbols;
   }
 
+  public Symbol getSymbol(int index) {
+    return symbols.get(index);
+  }
+
   // add the symbol in the scope
   public boolean addSymbol(Symbol symbol) {
     String id = symbol.getName();
@@ -64,12 +68,9 @@ public class Scope {
 
   public void printString() {
     for (int i = 0; i < symbols.size(); i++) {
-      if(!symbols.get(i).isInitialized)  {
-        System.out.println("\nSemantic Warning: " + symbols.get(i).type + " " + symbols.get(i).name + " was not initialized at " + symbols.get(i).line +
-                            " scope" + number);
-      }
-      System.out.println(symbols.get(i).name + " " + symbols.get(i).type + " " +
-                           this.number + " " + symbols.get(i).line);
+      int index = symbols.size() - 1 - i;
+      System.out.println(symbols.get(index).name + " " + symbols.get(index).type + " " +
+                           this.number + " " + symbols.get(index).line);
 
     }
   }

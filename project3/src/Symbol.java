@@ -4,10 +4,17 @@ public class Symbol {
   int line;
   boolean isInitialized;
 
+  public Symbol() {
+    this.name = "";
+    this.type = "";
+    this.line = 0;
+    this.isInitialized = false;
+  }
   public Symbol(String name, String type, int line) {
     this.name = name;
     this.type = type;
     this.line = line;
+    this.isInitialized = false;
   }
 
   public String getName() {

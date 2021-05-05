@@ -18,6 +18,9 @@ public class Semantic {
   // error number
   int err = 0;
 
+  //warning number
+  int warns = 0;
+
   // flag
   boolean flag = true;
 
@@ -51,11 +54,25 @@ public class Semantic {
   }
 
   public void endProgram() {
+    for (int i = 0; i < scopes.size(); i++) {
+      int len  = scopes.get(scopes.size() - 1 - i).getSymbols().size();
+      int number = scopes.get(scopes.size() - 1 - i).getNumber();
+      for (int j = 0; j < len; j++) {
+        int index = len - 1 - j;
+        Symbol symbol = scopes.get(scopes.size() - 1 - i).getSymbol(index);
+        if(!symbol.isInitialized)  {
+          System.out.println("\nSemantic Warning: " + symbol.type + " " + symbol.name + " was not initialized at " + symbol.line +
+                  " scope " + number);
+          warns++;
+        }
+
+      }
+    }
     if (err == 0) {
       System.out.println("Program " + program + " Semantic Analysis produced 0 error(s) and 0 warning(s)\n\n");
     } else {
       System.out.println("\n\n");
-      System.out.println("Program " + program + " Semantic Analysis produced " + err + " error(s)");
+      System.out.println("Program " + program + " Semantic Analysis produced " + err + " error(s) and" + warns + " warning(s)");
       System.out.println("Skipping CST due to Parse Error!");
       flag = false;
     }
@@ -180,7 +197,8 @@ public class Semantic {
     boolean flag = scope.findId(idValue);
     if (!flag) {
       err++;
-      System.out.println("Semantic Error: ID " + idValue +  " not in scope, ");
+      System.out.println("Semantic Error: ID " + idValue +   " on line " +
+              cstNode.children.get(0).children.get(0).lineNumber + " was used before being declared");
     }
 
     boolean typeCheck = scope.checkType(idValue, astNode.children.get(1));
@@ -213,7 +231,8 @@ public class Semantic {
       boolean flag = scope.findId(cstNode.children.get(0).children.get(0).getValue());
       if (!flag) {
         err++;
-        System.out.println("Semantic Error: ID " + cstNode.children.get(0).children.get(0).getValue() + " not in scope");
+        System.out.println("Semantic Error: ID " + cstNode.children.get(0).children.get(0).getValue() + " on line " +
+                cstNode.children.get(0).children.get(0).lineNumber + " was used before being declared");
 
       }
     }
