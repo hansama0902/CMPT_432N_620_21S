@@ -200,7 +200,6 @@ public class Semantic {
       System.out.println("Semantic Error: ID " + idValue +   " on line " +
               cstNode.children.get(0).children.get(0).lineNumber + " was used before being declared");
     }
-
     boolean typeCheck = scope.checkType(idValue, astNode.children.get(1));
     if (!typeCheck) {
       System.out.println( "Semantic Error: Type mismatch variable " + idValue  + " on " + line + ".Expecting "+ scope.getTypeOfSymbol(idValue));

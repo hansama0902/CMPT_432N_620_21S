@@ -102,6 +102,18 @@ public class Scope {
     return "";
   }
 
+  private  boolean isInt(String value) {
+    if (value.equals("true") || value.equals("false")) {
+      return false;
+    }
+    for (int i = 0; i < value.length(); i++) {
+      if (value.charAt(i) >= 'a' && value.charAt(i) <= 'z') {
+        return false;
+      }
+    }
+    return true;
+  }
+
   private boolean isNaN(String value) {
     //Todo: Implement
     return false;
@@ -118,7 +130,7 @@ public class Scope {
       String idType = this.getTypeOfSymbol(node.getType());
       return type.equals(idType);
     } else if (type.equals("int")) {
-      return !isNaN(value);
+      return isInt(value) && !isNaN(value);
     } else if (type.equals("string")) {
       if (value.equals("true") || value.equals("false")) {
         return !node.isBoolean();
