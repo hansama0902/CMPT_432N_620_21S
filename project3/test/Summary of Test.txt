@@ -1,0 +1,46 @@
+/*These are the test cases for the Semantic analyzer.
+The following test case provided interesting output before the fix.*/
+
+/*There was a first correct output in the Semantic analyzer.*/
+
+{
+ int a
+ boolean b
+ {
+  string c
+  a = 5
+  b = true /*comment*/
+  c = "inta"
+  print(c)
+  }
+ print(b)
+ print(a)
+}$
+
+{
+ int a
+ {
+  boolean b
+  a=1
+ }
+ print(b)
+}$
+
+/*Testing use of undeclared identifiers in a scope when declared in another scope*/
+
+
+{ {string a} print(a)}$
+
+/* Test the detection of redeclared identifiers */
+
+{ string a int a  print(a) }$
+
+/* Type mismatch */
+
+{int a a="han" a=false a=true print(a)}$
+
+
+/* Test the initialized warning */
+{int a string b boolean c print(b) c=false}$
+
+{int a string b boolean c while (c==(b==(a==c))) {} }$
