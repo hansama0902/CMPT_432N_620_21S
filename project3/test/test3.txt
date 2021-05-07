@@ -6,4 +6,4 @@
 
 
 /* Type mismatch */
-{int a a="hi" a=true a=false print(a)}$
+{int a a="han" a=false a=true print(a)}$
