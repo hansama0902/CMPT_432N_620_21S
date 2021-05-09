@@ -227,13 +227,13 @@ public class Semantic {
       id.setIdentifier(true);
       astNode.addChild(id);
 
-//      boolean flag = scope.findId(cstNode.children.get(0).children.get(0).getValue());
-//      if (!flag) {
-//        err++;
-//        System.out.println("Semantic Error: ID " + cstNode.children.get(0).children.get(0).getValue() + " on line " +
-//                cstNode.children.get(0).children.get(0).lineNumber + " was used before being declared");
-//
-//      }
+      boolean flag = scope.findId(cstNode.children.get(0).children.get(0).getValue());
+      if (!flag) {
+        err++;
+        System.out.println("Semantic Error: ID " + cstNode.children.get(0).children.get(0).getValue() + " on line " +
+                cstNode.children.get(0).children.get(0).lineNumber + " was used before being declared");
+
+      }
     }
   }
   public void analysisIntExpression(Node cstNode, Node astNode, Scope scope) {

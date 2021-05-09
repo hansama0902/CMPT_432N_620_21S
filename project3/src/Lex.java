@@ -55,26 +55,26 @@ public class Lex {
   }
 
   public void log(LOG log , String msg) {
-      System.out.println();  
-      System.out.println(log + " Lexer - " + msg);
+//      System.out.println();
+//      System.out.println(log + " Lexer - " + msg);
   }
 
   public void createToken(String type) {
     tokens.add(new Token(type, lineNum, linePos+1));
-    log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
+//    log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+//    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, String a) {
     tokens.add(new Token(type, lineNum, linePos+1, a));
-    log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
+//    log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+//    System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, int num) {
     tokens.add(new Token(type, lineNum, linePos+1, Integer.toString(num)));
-    log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
+//    log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+//    System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void parse(String line) {
