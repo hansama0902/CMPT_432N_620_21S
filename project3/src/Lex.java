@@ -61,20 +61,20 @@ public class Lex {
 
   public void createToken(String type) {
     tokens.add(new Token(type, lineNum, linePos+1));
-    //log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    //System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
+    log(LOG.DEBUG,  hmap.get(type) + "[ "+ type + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    System.out.println("LEXER: " + "\"" + type + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, String a) {
     tokens.add(new Token(type, lineNum, linePos+1, a));
-    //log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    //System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
+    log(LOG.DEBUG,  hmap.get(type) + "[ "+ a + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    System.out.println("LEXER: " + "\"" + a + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void createToken(String type, int num) {
     tokens.add(new Token(type, lineNum, linePos+1, Integer.toString(num)));
-    //log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
-    //System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
+    log(LOG.DEBUG,  hmap.get(type) + "[ "+ num + " ] " +" found at (" + lineNum + ", " + (linePos+1) + ")");
+    System.out.println("LEXER: " + "\"" + num + "\" -> [" + hmap.get(type) + "]");
   }
 
   public void parse(String line) {
@@ -198,7 +198,18 @@ public class Lex {
             f++;
           }
 
-          if (!isKeyword && (ch2 > 'z' || ch2 < 'a') || f >= len) {
+          if (f == len) {
+            s = s + ch2;
+            if (hmap.containsKey(s)) {
+              createToken(s);
+              state = STATE.DEFAULT;
+              linePos += (f-i);
+              i = f - 1;
+              isKeyword = true;
+            }
+          }
+
+          if (!isKeyword && ((ch2 > 'z' || ch2 < 'a') || f >= len)) {
             createToken("ID", Character.toString(ch));
             state = STATE.DEFAULT;
           }
