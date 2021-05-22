@@ -1,6 +1,16 @@
 public class CodeGen {
 
-  public void initProgram() {
+  private StaticTable staticTable;
+  private JumpTable jumpTable;
+  private int jumpCount;
+
+  CodeGen() {
+    this.staticTable = new StaticTable();
+    this.jumpTable = new JumpTable();
+    this.jumpCount = 0;
+  }
+
+  public void initProgram(Semantic semantic) {
 
   }
 

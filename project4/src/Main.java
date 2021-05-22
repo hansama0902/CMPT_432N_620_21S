@@ -8,6 +8,7 @@ public class Main {
     Lex lex = new Lex();
     Parser parser = new Parser();
     Semantic semantic = new Semantic();
+    CodeGen codeGen = new CodeGen();
     lex.initTokenKind();
     Scanner input = new Scanner(System.in);
     String line;
@@ -17,6 +18,7 @@ public class Main {
       if (lex.eop) {
         parser.init(lex.getTokens());
         semantic.initAnalysis(parser);
+        codeGen.initProgram(semantic);
 
         System.out.println("Program " + (parser.program - 1) + " Concrete Syntax Tree");
         System.out.println("----------------------------------------------------");
