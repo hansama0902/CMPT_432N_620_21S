@@ -2,11 +2,13 @@ public class CodeGen {
 
   private StaticTable staticTable;
   private JumpTable jumpTable;
+  private CodeTable codeTable;
   private int jumpCount;
 
   CodeGen() {
     this.staticTable = new StaticTable();
     this.jumpTable = new JumpTable();
+    this.codeTable = new CodeTable();
     this.jumpCount = 0;
   }
 
