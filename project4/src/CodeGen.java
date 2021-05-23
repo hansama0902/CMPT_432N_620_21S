@@ -11,7 +11,7 @@ public class CodeGen {
   }
 
   public void initProgram(Semantic semantic) {
-
+    this.translateStatement(semantic.ast.getRoot(), semantic.scopes.get(0));
   }
 
   public void translateBlock(Node node, Scope scope) {
@@ -74,6 +74,10 @@ public class CodeGen {
   }
 
   public void translateAssignment(Node node, Scope scope) {
+
+  }
+
+  public void addBreak() {
 
   }
 }
