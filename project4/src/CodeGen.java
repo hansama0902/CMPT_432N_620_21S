@@ -68,6 +68,12 @@ public class CodeGen {
 
   public void translateInt(Node node, Scope scope) {
 
+    char constant = 0x00;
+    this.addLoadWithConstant(constant);
+    this.addStoreInMemory(this.staticTable.getCurrentData().charAt(0), this.staticTable.getCurrentData().charAt(1));
+
+    StaticData data = new StaticData(this.staticTable.getCurrentData() ,node.children.get(1).getValue(), scope.getNumber(), this.staticTable.getOffset());
+    this.staticTable.addData(data);
   }
 
   public void translateBoolean(Node node, Scope scope) {
@@ -82,7 +88,28 @@ public class CodeGen {
 
   }
 
+  public void addLoadWithConstant(char constant) {
+    char opcode = 0xA9;
+    this.codeTable.addByte(opcode);
+    this.codeTable.addByte(constant);
+  }
+
+  public void addLoadWithMemory(char atAddr, char fromAddr) {
+    char opcode = 0xAD;
+    this.codeTable.addByte(opcode);
+    this.codeTable.addByte(atAddr);
+    this.codeTable.addByte(fromAddr);
+  }
+
+  public void addStoreInMemory(char atAddr, char fromAddr) {
+    char opcode = 0x8D;
+    this.codeTable.addByte(opcode);
+    this.codeTable.addByte(atAddr);
+    this.codeTable.addByte(fromAddr);
+  }
+
   public void addBreak() {
-    this.codeTable.addByte('0');
+    char opcode = 0x00;
+    this.codeTable.addByte(opcode);
   }
 }
