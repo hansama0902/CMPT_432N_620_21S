@@ -2,15 +2,33 @@ import java.util.LinkedList;
 
 class StaticData {
   private String temp;
+
+  // var name
   private String varName;
+
+  // var type
+  private String type;
+
+  // var scope line
   private int scope;
+
+  // static Table offset
   private int offset;
 
-  StaticData(String tmp, String varName, int scope, int offset) {
+  StaticData(String tmp, String varName, String type, int scope, int offset) {
     this.temp = tmp;
     this.varName = varName;
+    this.type = type;
     this.scope = scope;
     this.offset = offset;
+  }
+
+  public String getType() {
+    return type;
+  }
+
+  public void setType(String type) {
+    this.type = type;
   }
 
   public String getTemp() {
@@ -81,4 +99,14 @@ public class StaticTable {
   public void addData(StaticData data) {
     this.staticDatas.push(data);
   }
+
+  public StaticData getItemWithId(String temp) {
+    for (int i = 0; i < this.staticDatas.size(); i++) {
+      if (this.staticDatas.get(i).getTemp().equals(temp)) {
+        return this.staticDatas.get(i);
+      }
+    }
+    return null;
+  }
+
 }
