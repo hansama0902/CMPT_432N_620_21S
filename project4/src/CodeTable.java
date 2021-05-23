@@ -35,4 +35,12 @@ public class CodeTable {
     return this.heapPos;
   }
 
+  public void printString() {
+    String str = "";
+    for (int i = 0; i < 256; i++) {
+      str += Character.toString(this.table[i]);
+    }
+    System.out.println(str);
+  }
+
 }

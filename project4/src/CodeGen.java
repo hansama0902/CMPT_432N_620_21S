@@ -14,6 +14,9 @@ public class CodeGen {
 
   public void initProgram(Semantic semantic) {
     this.translateStatement(semantic.ast.getRoot(), semantic.scopes.get(0));
+    this.addBreak();
+    this.codeTable.printString();
+
   }
 
   public void translateBlock(Node node, Scope scope) {
@@ -80,6 +83,6 @@ public class CodeGen {
   }
 
   public void addBreak() {
-
+    this.codeTable.addByte('0');
   }
 }
