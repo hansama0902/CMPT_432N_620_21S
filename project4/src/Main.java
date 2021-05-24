@@ -35,6 +35,8 @@ public class Main {
           System.out.println("not produced due to error(s) detected by semantic analysis.");
           semantic.flag = true;
         }
+
+        codeGen.Print();
       }
     }
 

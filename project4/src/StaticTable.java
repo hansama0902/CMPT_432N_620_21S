@@ -102,11 +102,35 @@ public class StaticTable {
 
   public StaticData getItemWithId(String temp) {
     for (int i = 0; i < this.staticDatas.size(); i++) {
+      if (this.staticDatas.get(i).getVarName().equals(temp)) {
+        return this.staticDatas.get(i);
+      }
+    }
+    return null;
+  }
+
+  public StaticData getItemWithTemp(String temp) {
+    for (int i = 0; i < this.staticDatas.size(); i++) {
       if (this.staticDatas.get(i).getTemp().equals(temp)) {
         return this.staticDatas.get(i);
       }
     }
     return null;
+  }
+
+  public void removeTemp(CodeTable codeTable) {
+    String temp = "";
+    for(int i = 0; i < 255; i++) {
+      if (codeTable.getByte(i) == 'T') {
+        temp = "";
+        temp += codeTable.getByte(i);
+        temp += codeTable.getByte(i+1);
+        StaticData staticData = this.getItemWithTemp(temp);
+
+        codeTable.addByte((char)(staticData.getTemp().charAt(1) - '0' + codeTable.getCurrentAddress()), i);
+        codeTable.addByte((char)0x00, (i + 1));
+      }
+    }
   }
 
 }

@@ -10,10 +10,17 @@ public class CodeTable {
     this.heapPos = 255;
 
     for (int i = 0; i < 256; i++) {
-      this.table[i] = 0;
+      this.table[i] = '.';
     }
   }
 
+  public char getByte(int index) {
+    if (index > 255) {
+      System.out.println("out of index");
+      return 0;
+    }
+    return this.table[index];
+  }
   public void addByte(char bchar) {
     this.table[this.address] = bchar;
     this.address++;
@@ -36,11 +43,21 @@ public class CodeTable {
   }
 
   public void printString() {
-    String str = "";
     for (int i = 0; i < 256; i++) {
-      str += Character.toString(this.table[i]);
+      if(i%8 == 0) {
+        System.out.printf("\n%02x ", ((int)this.table[i]));
+      } else {
+        System.out.printf("%02x ",((int)this.table[i]));
+      }
     }
-    System.out.println(str);
+  }
+
+  public void zero() {
+    for (int i = 0; i < 256; i++) {
+      if (this.table[i] == '.') {
+        this.table[i] = 0;
+      }
+    }
   }
 
 }
