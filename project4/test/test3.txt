@@ -1,0 +1,3 @@
+/*Printing in different scopes */
+
+{int a a=1 {a=3 print(a)} print(a)}$
