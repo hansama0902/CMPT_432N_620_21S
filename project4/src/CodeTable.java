@@ -52,6 +52,22 @@ public class CodeTable {
     }
   }
 
+  public int writeStringToHeap(String value) {
+      int start;
+      this.addByte((char)0x00, this.heapPos);
+      this.heapPos--;
+      start = this.heapPos;
+
+      for (int i = value.length() - 1; i >= 0; i--) {
+        start = this.heapPos;
+        this.addByte(value.charAt(i), this.heapPos);
+        this.heapPos--;
+      }
+
+      return start;
+    }
+  }
+
   public void zero() {
     for (int i = 0; i < 256; i++) {
       if (this.table[i] == '.') {

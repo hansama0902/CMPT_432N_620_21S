@@ -103,7 +103,9 @@ public class CodeGen {
   }
 
   public void translateString(Node node, Scope scope) {
+    StaticData data = new StaticData(this.staticTable.getNextData() ,node.children.get(1).getType(), "string", scope.getNumber(), this.staticTable.getOffset() + 1);
 
+    this.staticTable.addData(data);
   }
 
   private char leftPad(String value) {
@@ -143,7 +145,15 @@ public class CodeGen {
     } else if (node.children.get(1).isBoolean()) {
 
     } else {
+      // string
+      StaticData data = this.staticTable.getItemWithId(node.children.get(0).getType());
+      if (data == null) {
+        System.out.println("temp not in static Table");
+      }
+      int pointer = this.codeTable.writeStringToHeap(node.children.get(1).getType());
+      this.addLoadWithConstant((char)pointer);
 
+      this.addStoreInMemory(data.getTemp().charAt(0), data.getTemp().charAt(0));
     }
 
   }
