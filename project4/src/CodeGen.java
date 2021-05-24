@@ -67,7 +67,25 @@ public class CodeGen {
   }
 
   public void translateIF(Node node, Scope scope) {
+    if (node.children.get(0).children.get(0).isIdentifier() && node.children.get(0).children.get(1).isIdentifier()) {
+      StaticData firstTableEntry = this.staticTable.getItemWithId(node.children.get(0).children.get(0).getType());
+      this.addLoadRegYWithMemory(firstTableEntry.getTemp().charAt(0), firstTableEntry.getTemp().charAt(1));
 
+      StaticData secondTableEntry = this.staticTable.getItemWithId(node.children.get(0).children.get(1).getType());
+      this.addCompareByte(secondTableEntry.getTemp().charAt(0), secondTableEntry.getTemp().charAt(1));
+      JumpItem jumpEntry = new JumpItem(this.jumpTable.getCurrentTemp(), 0);
+      this.jumpTable.addItem(jumpEntry);
+      int start = this.codeTable.getCurrentAddress();
+      this.addBranch(jumpEntry.getTemp().charAt(1));
+      this.jumpTable.incTemp();
+      // Lastly, generate block
+      this.translateBlock(node.children.get(1), scope);
+      // Update the jump distance for the new entry
+      this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start + 1);
+    }
+    else if (node.children.size() == 1 && node.children.get(0).getType().equals("true")) {
+      this.translateBlock(node.children.get(1), scope);
+    }
   }
 
   public void translatePrint(Node node, Scope scope) {

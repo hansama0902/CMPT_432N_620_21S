@@ -53,6 +53,19 @@ public class JumpTable {
     return this.number;
   }
 
+  public void incTemp() {
+    this.number++;
+  }
+
+
+  public void setDistanceForItem(JumpItem item, int dis) {
+    for (int i = 0; i < this.jumpItems.size(); i++) {
+      if (this.jumpItems.get(i).equals(item)) {
+        this.jumpItems.get(i).setDistance(dis);
+      }
+    }
+  }
+
   public JumpItem getItemAtIndex(int index) {
     if (index >= this.jumpItems.size()) {
       return null;
