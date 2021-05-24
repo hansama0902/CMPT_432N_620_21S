@@ -48,7 +48,22 @@ public class CodeGen {
   }
 
   public void translateWhile(Node node, Scope scope) {
+    int current = this.codeTable.getCurrentAddress();
+    this.translateBooleanExpresion(node.children.get(0), scope);
 
+    String jumpTemp = this.jumpTable.getNextTemp();
+    JumpItem item = new JumpItem(jumpTemp, 0);
+    this.jumpTable.addItem(item);
+    this.addBranch(leftPad(String.valueOf(this.codeTable.getCurrentAddress())));
+    this.translateBlock(node.children.get(1), scope);
+    this.addLoadWithConstant((char)0x00);
+    this.addStoreInMemory((char)0x00, (char)0x00);
+    this.addLoadRegXWithConstant((char)0x01);
+    this.addCompareByte((char)0x00, (char)0x00);
+
+    int leftPadV = 256 - this.codeTable.getCurrentAddress() - current + 2;
+
+    this.addBranch((char)leftPadV);
   }
 
   public void translateIF(Node node, Scope scope) {
@@ -99,7 +114,20 @@ public class CodeGen {
   }
 
   public void translateBoolean(Node node, Scope scope) {
+    StaticData data = new StaticData(this.staticTable.getCurrentData() ,node.children.get(1).getType(), "boolean", scope.getNumber(), this.staticTable.getOffset());
 
+    this.staticTable.addData(data);
+    this.staticTable.incTemp();
+  }
+
+  public void translateBooleanExpresion(Node node, Scope scope) {
+    String type = node.getType();
+    if (type.equals("false")) {
+      this.addLoadRegXWithConstant((char)0x01);
+      this.addLoadWithConstant((char)0x00);
+      this.addStoreInMemory((char)0x00, (char)0x00);
+      this.addCompareByte((char)0x00, (char)0x00);
+    }
   }
 
   public void translateString(Node node, Scope scope) {
@@ -153,7 +181,7 @@ public class CodeGen {
       int pointer = this.codeTable.writeStringToHeap(node.children.get(1).getType());
       this.addLoadWithConstant((char)pointer);
 
-      this.addStoreInMemory(data.getTemp().charAt(0), data.getTemp().charAt(0));
+      this.addStoreInMemory(data.getTemp().charAt(0), data.getTemp().charAt(1));
     }
 
   }

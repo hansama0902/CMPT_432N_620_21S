@@ -96,6 +96,10 @@ public class StaticTable {
     return this.staticDatas.get(index);
   }
 
+  public void incTemp() {
+    this.number++;
+  }
+
   public void addData(StaticData data) {
     this.staticDatas.push(data);
   }
