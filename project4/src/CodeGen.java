@@ -1,15 +1,20 @@
+import java.util.LinkedList;
+
 public class CodeGen {
 
   private StaticTable staticTable;
   private JumpTable jumpTable;
   private CodeTable codeTable;
   private int jumpCount;
+  private LinkedList<Scope> scopes;
+  private int scopeLine;
 
   CodeGen() {
     this.staticTable = new StaticTable();
     this.jumpTable = new JumpTable();
     this.codeTable = new CodeTable();
     this.jumpCount = 0;
+    this.scopeLine = 0;
   }
 
   public void Print() {
@@ -17,7 +22,8 @@ public class CodeGen {
   }
 
   public void initProgram(Semantic semantic) {
-    this.translateStatement(semantic.ast.getRoot(), semantic.scopes.get(0));
+    scopes = new LinkedList<>(semantic.scopes);
+    this.translateStatement(semantic.ast.getRoot(), this.scopes.get(this.scopeLine));
     this.addBreak();
     this.staticTable.removeTemp(this.codeTable);
     this.codeTable.zero();
@@ -32,7 +38,8 @@ public class CodeGen {
   public void translateStatement(Node node, Scope scope) {
     String type = node.getType();
     if (type.equals("Block")) {
-      this.translateBlock(node, scope);
+      this.translateBlock(node, this.scopes.get(this.scopeLine));
+      this.scopeLine++;
     } else if (type.equals("While Statement")) {
       this.translateWhile(node, scope);
     } else if (type.equals("If Statement")) {
