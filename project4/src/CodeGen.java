@@ -129,6 +129,7 @@ public class CodeGen {
     StaticData data = new StaticData(this.staticTable.getCurrentData() ,node.children.get(1).getType(), "int", scope.getNumber(), this.staticTable.getOffset());
 
     this.staticTable.addData(data);
+    this.staticTable.incTemp();
   }
 
   public void translateBoolean(Node node, Scope scope) {
@@ -149,9 +150,10 @@ public class CodeGen {
   }
 
   public void translateString(Node node, Scope scope) {
-    StaticData data = new StaticData(this.staticTable.getNextData() ,node.children.get(1).getType(), "string", scope.getNumber(), this.staticTable.getOffset() + 1);
-
+    StaticData data = new StaticData(this.staticTable.getCurrentData() ,node.children.get(1).getType(), "string", scope.getNumber(), this.staticTable.getOffset());
     this.staticTable.addData(data);
+    this.staticTable.incTemp();
+
   }
 
   private char leftPad(String value) {
@@ -165,7 +167,6 @@ public class CodeGen {
 
   public void translateAssignment(Node node, Scope scope) {
     String type = node.children.get(1).getType();
-    System.out.println(type);
     if (node.children.get(1).isIdentifier()) {
       // Setting an ID to another ID's value
       StaticData firstTableEntry = this.staticTable.getItemWithId(node.children.get(1).getType());

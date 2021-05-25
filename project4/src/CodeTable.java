@@ -45,7 +45,7 @@ public class CodeTable {
   public void printString() {
     for (int i = 0; i < 256; i++) {
       if(i%8 == 0) {
-        System.out.printf("\n%02x ", ((int)this.table[i]));
+        System.out.printf("\n%02x: %02x ",i, ((int)this.table[i]));
       } else {
         System.out.printf("%02x ",((int)this.table[i]));
       }

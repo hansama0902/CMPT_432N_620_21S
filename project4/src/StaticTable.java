@@ -100,6 +100,7 @@ public class StaticTable {
     this.number++;
   }
 
+
   public void addData(StaticData data) {
     this.staticDatas.push(data);
   }
