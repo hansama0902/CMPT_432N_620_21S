@@ -1,0 +1,2 @@
+{string a a="freewill" int c c=1 if(c==1){print(a)}
+ string b b="red" if true{print(b)}}$
