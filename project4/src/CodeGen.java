@@ -26,6 +26,7 @@ public class CodeGen {
     this.translateStatement(semantic.ast.getRoot(), this.scopes.get(this.scopeLine));
     this.addBreak();
     this.staticTable.removeTemp(this.codeTable);
+    this.jumpTable.removeTemp(this.codeTable);
     this.codeTable.zero();
   }
 
@@ -76,19 +77,35 @@ public class CodeGen {
   public void translateIF(Node node, Scope scope) {
     if (node.children.get(0).children.get(0).isIdentifier() && node.children.get(0).children.get(1).isIdentifier()) {
       StaticData firstTableEntry = this.staticTable.getItemWithId(node.children.get(0).children.get(0).getType());
-      this.addLoadRegYWithMemory(firstTableEntry.getTemp().charAt(0), firstTableEntry.getTemp().charAt(1));
+      this.addLoadRegXWithMemory(firstTableEntry.getTemp().charAt(0), firstTableEntry.getTemp().charAt(1));
 
       StaticData secondTableEntry = this.staticTable.getItemWithId(node.children.get(0).children.get(1).getType());
       this.addCompareByte(secondTableEntry.getTemp().charAt(0), secondTableEntry.getTemp().charAt(1));
+
       JumpItem jumpEntry = new JumpItem(this.jumpTable.getCurrentTemp(), 0);
       this.jumpTable.addItem(jumpEntry);
-      int start = this.codeTable.getCurrentAddress();
       this.addBranch(jumpEntry.getTemp().charAt(1));
       this.jumpTable.incTemp();
+
+      int start = this.codeTable.getCurrentAddress();
       // Lastly, generate block
       this.translateBlock(node.children.get(1), scope);
       // Update the jump distance for the new entry
-      this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start + 1);
+      this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start);
+
+    } else if (node.children.get(0).children.get(0).isIdentifier() && node.children.get(0).children.get(1).isInt()) {
+      this.addLoadRegXWithConstant((char)Integer.parseInt(node.children.get(0).children.get(1).getType()) );
+      StaticData firstTableEntry = this.staticTable.getItemWithId(node.children.get(0).children.get(0).getType());
+      this.addCompareByte(firstTableEntry.getTemp().charAt(0), firstTableEntry.getTemp().charAt(1));
+
+      JumpItem jumpEntry = new JumpItem(this.jumpTable.getCurrentTemp(), 0);
+      this.jumpTable.addItem(jumpEntry);
+      this.addBranch(jumpEntry.getTemp().charAt(1));
+      this.jumpTable.incTemp();
+
+      int start = this.codeTable.getCurrentAddress();
+      this.translateBlock(node.children.get(1), scope);
+      this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start);
     }
     else if (node.children.size() == 1 && node.children.get(0).getType().equals("true")) {
       this.translateBlock(node.children.get(1), scope);

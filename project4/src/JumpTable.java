@@ -66,6 +66,27 @@ public class JumpTable {
     }
   }
 
+  public void removeTemp(CodeTable codeTable) {
+    String temp = "";
+    for(int i = 0; i < 255; i++) {
+      if (codeTable.getByte(i) == 0xD0) {
+        temp = "J";
+        temp += codeTable.getByte(i+1);
+        JumpItem item = this.getItemWithTemp(temp);
+
+        codeTable.addByte((char)item.distance, i+1);
+      }
+    }
+  }
+
+  public JumpItem getItemWithTemp(String temp) {
+    for (int i = 0; i < this.jumpItems.size(); i++) {
+      if (this.jumpItems.get(i).getTemp().equals(temp)) {
+        return this.jumpItems.get(i);
+      }
+    }
+    return null;
+  }
   public JumpItem getItemAtIndex(int index) {
     if (index >= this.jumpItems.size()) {
       return null;
