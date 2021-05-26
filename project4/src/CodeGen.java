@@ -75,7 +75,8 @@ public class CodeGen {
   }
 
   public void translateIF(Node node, Scope scope) {
-    if (node.children.get(0).children.get(0).isIdentifier() && node.children.get(0).children.get(1).isIdentifier()) {
+    // handle with both id
+    if (node.children.get(0).children.size() > 1 && node.children.get(0).children.get(0).isIdentifier() && node.children.get(0).children.get(1).isIdentifier()) {
       StaticData firstTableEntry = this.staticTable.getItemWithId(node.children.get(0).children.get(0).getType());
       this.addLoadRegXWithMemory(firstTableEntry.getTemp().charAt(0), firstTableEntry.getTemp().charAt(1));
 
@@ -93,7 +94,7 @@ public class CodeGen {
       // Update the jump distance for the new entry
       this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start);
 
-    } else if (node.children.get(0).children.get(0).isIdentifier() && node.children.get(0).children.get(1).isInt()) {
+    } else if (node.children.get(0).children.size() > 1 && node.children.get(0).children.get(0).isIdentifier() && node.children.get(0).children.get(1).isInt()) {
       this.addLoadRegXWithConstant((char)Integer.parseInt(node.children.get(0).children.get(1).getType()) );
       StaticData firstTableEntry = this.staticTable.getItemWithId(node.children.get(0).children.get(0).getType());
       this.addCompareByte(firstTableEntry.getTemp().charAt(0), firstTableEntry.getTemp().charAt(1));
@@ -107,7 +108,7 @@ public class CodeGen {
       this.translateBlock(node.children.get(1), scope);
       this.jumpTable.setDistanceForItem(jumpEntry, this.codeTable.getCurrentAddress() - start);
     }
-    else if (node.children.size() == 1 && node.children.get(0).getType().equals("true")) {
+    else if (node.children.get(0).children.size() == 1 && node.children.get(0).getType().equals("true")) {
       this.translateBlock(node.children.get(1), scope);
     }
   }
