@@ -1,0 +1,48 @@
+
+/*These are the test cases for the codeGen.
+The following test case provided interesting output before the fix.*/
+
+/*It is my first example */
+
+{
+   int i
+   i = 5
+   print(i)
+}$
+
+
+/*It is example of note */
+
+{
+ int a
+ a = 1
+ {
+ int a
+ a = 2
+ print(a)
+ }
+ string b
+ b = "alan"
+ if (a == 1) {
+ print(b)
+ }
+}$
+
+
+/*Simple VarDecl -> Assign */
+
+{string a a="limelight" print(a) int b b=1 print(b) boolean c c=true print(c) boolean d d=false print(d)}$
+
+
+
+/*Printing in different scopes */
+
+{int a a=1 {a=3 print(a)} print(a)}$
+
+
+/*if statements! 
+Equal, Not Equal, True, and False
+*/
+
+{string a a="free" int c c=1 if(c==1){print(a)}
+ string b b="red" if true{print(b)}}$
