@@ -73,7 +73,9 @@ public class JumpTable {
         temp = "J";
         temp += codeTable.getByte(i+1);
         JumpItem item = this.getItemWithTemp(temp);
-
+        if (item == null) {
+          continue;
+        }
         codeTable.addByte((char)item.distance, i+1);
       }
     }

@@ -125,12 +125,16 @@ public class CodeGen {
       this.addSystemCall();
     } else if (node.children.get(0).isInt()) {
 
-      this.translateInt(node.children.get(0), scope);
+      //this.translateInt(node.children.get(0), scope);
       this.addStoreInMemory((char)0x00, (char)0x00);
       // system call to print int
       this.addLoadRegXWithConstant((char)0x01);
       this.addLoadRegXWithMemory((char)0x00, (char)0x00);
       this.addSystemCall();
+    } else if (node.children.get(0).isBoolean()) {
+
+    } else {
+
     }
 
   }
